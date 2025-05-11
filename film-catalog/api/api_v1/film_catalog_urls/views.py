@@ -11,7 +11,7 @@ from schemas.film import (
     FilmCreate,
 )
 from .dependencies import prefetch_film
-from .crud import FILMS
+from .crud import storage
 
 router = APIRouter(
     prefix="/films",
@@ -23,8 +23,8 @@ router = APIRouter(
     path="/",
     response_model=list[Film],
 )
-def get_list_of_films():
-    return FILMS
+def get_list_of_films() -> list[Film]:
+    return storage.get()
 
 
 @router.post(
@@ -32,10 +32,8 @@ def get_list_of_films():
     response_model=Film,
     status_code=status.HTTP_201_CREATED,
 )
-def create_film(
-    film_create: FilmCreate,
-):
-    return Film(**film_create.model_dump())
+def create_film(film_create: FilmCreate) -> Film:
+    return storage.create(film_create)
 
 
 @router.get(path="/{slug}/")
@@ -44,5 +42,5 @@ def read_movie_description(
         Film,
         Depends(prefetch_film),
     ],
-):
+) -> Film:
     return film
