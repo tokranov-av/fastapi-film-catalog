@@ -1,4 +1,3 @@
-import random
 from typing import Annotated
 
 from fastapi import (
@@ -7,7 +6,10 @@ from fastapi import (
     status,
 )
 
-from schemas.film import Film, FilmCreate
+from schemas.film import (
+    Film,
+    FilmCreate,
+)
 from .dependencies import prefetch_film
 from .crud import FILMS
 
@@ -33,10 +35,10 @@ def get_list_of_films():
 def create_film(
     film_create: FilmCreate,
 ):
-    return Film(id=random.randint(1, 1000), **film_create.model_dump())
+    return Film(**film_create.model_dump())
 
 
-@router.get(path="/{movie_id}/")
+@router.get(path="/{slug}/")
 def read_movie_description(
     film: Annotated[
         Film,
