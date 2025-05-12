@@ -36,7 +36,21 @@ def create_film(film_create: FilmCreate) -> Film:
     return storage.create(film_create)
 
 
-@router.get(path="/{slug}/")
+@router.get(
+    path="/{slug}/",
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Film not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Movie with 'slug' not found",
+                    },
+                },
+            },
+        },
+    },
+)
 def read_movie_description(
     film: Annotated[
         Film,
@@ -44,3 +58,28 @@ def read_movie_description(
     ],
 ) -> Film:
     return film
+
+
+@router.delete(
+    path="/{slug}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Film not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Movie with 'slug' not found",
+                    },
+                },
+            },
+        },
+    },
+)
+def delete_film(
+    film: Annotated[
+        Film,
+        Depends(prefetch_film),
+    ],
+) -> None:
+    storage.delete(film=film)
