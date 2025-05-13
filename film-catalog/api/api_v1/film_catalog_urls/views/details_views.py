@@ -5,8 +5,10 @@ from starlette import status
 
 from api.api_v1.film_catalog_urls.crud import storage
 from api.api_v1.film_catalog_urls.dependencies import prefetch_film
-from schemas.film import Film
-
+from schemas.film import (
+    Film,
+    FilmUpdate,
+)
 
 router = APIRouter(
     prefix="/slug",
@@ -24,16 +26,35 @@ router = APIRouter(
     },
 )
 
+FilmBySlug = Annotated[
+    Film,
+    Depends(prefetch_film),
+]
+
 
 @router.get(
     path="/",
+    response_model=Film,
 )
 def read_movie_description(
-    film: Annotated[
-        Film,
-        Depends(prefetch_film),
-    ],
+    film: FilmBySlug,
 ) -> Film:
+    return film
+
+
+@router.put(
+    path="/",
+    response_model=Film,
+)
+def update_movie_description(
+    film: FilmBySlug,
+    film_in: FilmUpdate,
+):
+    storage.update(
+        film=film,
+        film_in=film_in,
+    )
+
     return film
 
 
@@ -41,10 +62,7 @@ def read_movie_description(
     path="/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_film(
-    film: Annotated[
-        Film,
-        Depends(prefetch_film),
-    ],
+def delete_movie_description(
+    film: FilmBySlug,
 ) -> None:
     storage.delete(film=film)
