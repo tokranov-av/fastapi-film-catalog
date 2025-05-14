@@ -8,6 +8,7 @@ from api.api_v1.film_catalog_urls.dependencies import prefetch_film
 from schemas.film import (
     Film,
     FilmUpdate,
+    FilmPartialUpdate,
 )
 
 router = APIRouter(
@@ -51,6 +52,22 @@ def update_movie_description(
     film_in: FilmUpdate,
 ):
     storage.update(
+        film=film,
+        film_in=film_in,
+    )
+
+    return film
+
+
+@router.patch(
+    path="/",
+    response_model=Film,
+)
+def update_movie_description_partial(
+    film: FilmBySlug,
+    film_in: FilmPartialUpdate,
+):
+    storage.update_partial(
         film=film,
         film_in=film_in,
     )
