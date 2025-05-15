@@ -6,6 +6,7 @@ from fastapi import (
 from schemas.film import (
     Film,
     FilmCreate,
+    FilmRead,
 )
 from api.api_v1.film_catalog_urls.crud import storage
 
@@ -17,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/",
-    response_model=list[Film],
+    response_model=list[FilmRead],
 )
 def get_list_of_films() -> list[Film]:
     return storage.get()
@@ -25,7 +26,7 @@ def get_list_of_films() -> list[Film]:
 
 @router.post(
     path="/",
-    response_model=Film,
+    response_model=FilmRead,
     status_code=status.HTTP_201_CREATED,
 )
 def create_film(film_create: FilmCreate) -> Film:
