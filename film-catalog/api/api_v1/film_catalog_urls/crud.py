@@ -1,10 +1,9 @@
-import os
-
 from pydantic import (
     BaseModel,
     ValidationError,
 )
 
+from core.config import FILMS_STORAGE_FILEPATH
 from schemas.film import (
     Film,
     FilmCreate,
@@ -15,30 +14,16 @@ from schemas.film import (
 
 class FilmStorage(BaseModel):
     slug_to_film: dict[str, Film] = {}
-    file_path: str = os.path.join(os.path.dirname(__file__), "data.json")
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def save_state(self) -> None:
+        FILMS_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
 
-        self._read_file()
+    @classmethod
+    def from_state(cls) -> "FilmStorage":
+        if not FILMS_STORAGE_FILEPATH.exists():
+            return FilmStorage()
 
-    def _read_file(self):
-        with open(self.file_path, "r", encoding="utf-8") as file:
-            data = ""
-            for line in file:
-                line = line.replace("\n", "").strip()
-                if line.startswith("{"):
-                    data = ""
-
-                data += line
-
-                if data.endswith("}"):
-                    try:
-                        film = Film.model_validate_json(data)
-                        self.slug_to_film[film.slug] = film
-                        data = ""
-                    except ValidationError as e:
-                        pass
+        return cls.model_validate_json(FILMS_STORAGE_FILEPATH.read_text())
 
     def get(self) -> list[Film]:
         return list(self.slug_to_film.values())
@@ -49,9 +34,7 @@ class FilmStorage(BaseModel):
     def create(self, film_create: FilmCreate) -> Film:
         film = Film(**film_create.model_dump())
         self.slug_to_film[film.slug] = film
-
-        with open(self.file_path, "a", encoding="utf-8") as file:
-            file.write(film.model_dump_json(indent=2) + "\n")
+        self.save_state()
 
         return film
 
@@ -68,6 +51,7 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in:
             setattr(film, field_name, value)
+        self.save_state()
 
         return film
 
@@ -78,8 +62,13 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in.model_dump(exclude_unset=True).items():
             setattr(film, field_name, value)
+        self.save_state()
 
         return film
 
 
-storage = FilmStorage()
+try:
+    storage = FilmStorage.from_state()
+except ValidationError:
+    storage = FilmStorage()
+    storage.save_state()
