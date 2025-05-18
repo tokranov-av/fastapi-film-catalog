@@ -1,3 +1,5 @@
+import logging
+
 from pydantic import (
     BaseModel,
     ValidationError,
@@ -11,16 +13,21 @@ from schemas.film import (
     FilmPartialUpdate,
 )
 
+log = logging.getLogger(__name__)
+
 
 class FilmStorage(BaseModel):
     slug_to_film: dict[str, Film] = {}
 
     def save_state(self) -> None:
         FILMS_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
+        log.info(f"Информация о фильме сохранена.")
 
     @classmethod
     def from_state(cls) -> "FilmStorage":
         if not FILMS_STORAGE_FILEPATH.exists():
+            log.info("Файл хранилища отсутствует")
+
             return FilmStorage()
 
         return cls.model_validate_json(FILMS_STORAGE_FILEPATH.read_text())
@@ -69,6 +76,8 @@ class FilmStorage(BaseModel):
 
 try:
     storage = FilmStorage.from_state()
+    log.warning("Хранилище проинициализировано")
 except ValidationError:
     storage = FilmStorage()
     storage.save_state()
+    log.warning("Переписан файл хранилища из-за ошибки проверки")
