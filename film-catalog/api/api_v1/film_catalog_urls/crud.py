@@ -73,11 +73,17 @@ class FilmStorage(BaseModel):
 
         return film
 
+    def init_storage_from_state(self) -> None:
+        try:
+            data = self.from_state()
+        except ValidationError:
+            self.save_state()
+            log.warning("Переписан файл хранилища из-за ошибки проверки")
+        else:
+            self.slug_to_film.update(
+                data.slug_to_film,
+            )
+            log.warning("Хранилище заполнено данными из файла хранилища")
 
-try:
-    storage = FilmStorage.from_state()
-    log.warning("Хранилище проинициализировано")
-except ValidationError:
-    storage = FilmStorage()
-    storage.save_state()
-    log.warning("Переписан файл хранилища из-за ошибки проверки")
+
+storage = FilmStorage()
