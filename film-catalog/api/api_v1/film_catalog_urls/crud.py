@@ -1,4 +1,5 @@
 import logging
+import time
 
 from pydantic import (
     BaseModel,
@@ -20,6 +21,7 @@ class FilmStorage(BaseModel):
     slug_to_film: dict[str, Film] = {}
 
     def save_state(self) -> None:
+        time.sleep(10)
         FILMS_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
         log.info(f"Информация о фильме сохранена.")
 
@@ -39,9 +41,10 @@ class FilmStorage(BaseModel):
         return self.slug_to_film.get(slug)
 
     def create(self, film_create: FilmCreate) -> Film:
-        film = Film(**film_create.model_dump())
+        film = Film(
+            **film_create.model_dump(),
+        )
         self.slug_to_film[film.slug] = film
-        self.save_state()
 
         return film
 
@@ -58,7 +61,6 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in:
             setattr(film, field_name, value)
-        self.save_state()
 
         return film
 
@@ -69,7 +71,6 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in.model_dump(exclude_unset=True).items():
             setattr(film, field_name, value)
-        self.save_state()
 
         return film
 
@@ -78,12 +79,12 @@ class FilmStorage(BaseModel):
             data = self.from_state()
         except ValidationError:
             self.save_state()
-            log.warning("Переписан файл хранилища из-за ошибки проверки")
+            log.warning("Перезаписан файл хранилища из-за ошибки проверки")
         else:
             self.slug_to_film.update(
                 data.slug_to_film,
             )
-            log.warning("Хранилище заполнено данными из файла хранилища")
+            log.info("Хранилище заполнено данными из файла хранилища")
 
 
 storage = FilmStorage()

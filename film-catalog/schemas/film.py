@@ -40,7 +40,7 @@ class FilmPartialUpdate(FilmBase):
 
     name: StringMinLen1 | None = None
     description: StringMaxLen1000 | None = None
-    production_year: IntegerGt1900LtNow
+    production_year: IntegerGt1900LtNow | None = None
     country: StringMinLen3 | None = None
     genre: StringMinLen1 | None = None
 

@@ -1,6 +1,7 @@
 from fastapi import (
     APIRouter,
     status,
+    BackgroundTasks,
 )
 
 from schemas.film import (
@@ -29,5 +30,10 @@ def get_list_of_films() -> list[Film]:
     response_model=FilmRead,
     status_code=status.HTTP_201_CREATED,
 )
-def create_film(film_create: FilmCreate) -> Film:
+def create_film(
+    film_create: FilmCreate,
+    background_tasks: BackgroundTasks,
+) -> Film:
+    background_tasks.add_task(storage.save_state)
+
     return storage.create(film_create)
