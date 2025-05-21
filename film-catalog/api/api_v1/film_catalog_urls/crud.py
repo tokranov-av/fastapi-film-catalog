@@ -21,7 +21,6 @@ class FilmStorage(BaseModel):
     slug_to_film: dict[str, Film] = {}
 
     def save_state(self) -> None:
-        time.sleep(10)
         FILMS_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
         log.info(f"Информация о фильме сохранена.")
 
