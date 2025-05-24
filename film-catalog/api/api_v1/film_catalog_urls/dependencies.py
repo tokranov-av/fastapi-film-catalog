@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import (
+    Request,
     BackgroundTasks,
     HTTPException,
 )
@@ -10,6 +11,15 @@ from schemas.film import Film
 from .crud import storage
 
 log = logging.getLogger(__name__)
+
+UNSAFE_METHODS = frozenset(
+    {
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+    }
+)
 
 
 def prefetch_film(slug: str) -> Film:
@@ -25,11 +35,14 @@ def prefetch_film(slug: str) -> Film:
 
 
 def save_storage_state(
+    request: Request,
     background_tasks: BackgroundTasks,
 ):
-    log.info("First time inside dependency save_storage_state")
+    # Выполняется код до входа внутрь view функции
     yield
-    background_tasks.add_task(storage.save_state)
-    log.debug(
-        "Добавлена фоновая задача для сохранения описания о фильме в файл хранилище"
-    )
+    # Выполняется код после покидания view функции
+    if request.method in UNSAFE_METHODS:
+        background_tasks.add_task(storage.save_state)
+        log.debug(
+            "Добавлена фоновая задача для сохранения описания о фильме в файл хранилище"
+        )
