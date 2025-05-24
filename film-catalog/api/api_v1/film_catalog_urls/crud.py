@@ -1,5 +1,4 @@
 import logging
-import time
 
 from pydantic import (
     BaseModel,
@@ -44,6 +43,7 @@ class FilmStorage(BaseModel):
             **film_create.model_dump(),
         )
         self.slug_to_film[film.slug] = film
+        log.info("Создано описание фильма '%s' ", film.name)
 
         return film
 
