@@ -41,7 +41,7 @@ def prefetch_film(slug: str) -> Film:
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Фильм со слагом '{slug}' не найден",
+        detail=f"Movie with slug '{slug}' not found",
     )
 
 
@@ -72,6 +72,6 @@ def api_token_required(
     if request.method in UNSAFE_METHODS and api_token not in API_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Неверный API токен",
+            detail="Invalid API token",
         )
     yield
