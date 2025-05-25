@@ -19,3 +19,10 @@ cd film-catalog
 ```shell
 fastapi dev
 ```
+
+## Snippets
+
+```shell
+python -c 'import secrets; print(secrets.token_urlsafe(16))'
+```
+

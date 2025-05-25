@@ -1,14 +1,25 @@
 import logging
+from typing import (
+    Annotated,
+)
 
 from fastapi import (
+    Query,
     Request,
     BackgroundTasks,
     HTTPException,
+    status,
 )
-from starlette import status
 
-from schemas.film import Film
-from .crud import storage
+from core.config import (
+    API_TOKENS,
+)
+from schemas.film import (
+    Film,
+)
+from .crud import (
+    storage,
+)
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +41,7 @@ def prefetch_film(slug: str) -> Film:
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Movie with {slug} not found",
+        detail=f"Фильм со слагом '{slug}' не найден",
     )
 
 
@@ -38,6 +49,8 @@ def save_storage_state(
     request: Request,
     background_tasks: BackgroundTasks,
 ):
+    """Добавляет фоновую задачу сохранения описания о фильме в файл хранилище."""
+
     # Выполняется код до входа внутрь view функции
     yield
     # Выполняется код после покидания view функции
@@ -46,3 +59,19 @@ def save_storage_state(
         log.debug(
             "Добавлена фоновая задача для сохранения описания о фильме в файл хранилище"
         )
+
+
+def api_token_required(
+    request: Request,
+    api_token: Annotated[
+        str,
+        Query(),
+    ] = "",
+):
+    """Проверяет наличие в запросе корректного токена."""
+    if request.method in UNSAFE_METHODS and api_token not in API_TOKENS:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Неверный API токен",
+        )
+    yield

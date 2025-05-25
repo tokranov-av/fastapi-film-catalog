@@ -5,6 +5,7 @@ from fastapi import (
 )
 
 from api.api_v1.film_catalog_urls.dependencies import (
+    api_token_required,
     save_storage_state,
 )
 from schemas.film import (
@@ -19,7 +20,10 @@ from api.api_v1.film_catalog_urls.crud import (
 router = APIRouter(
     prefix="/films",
     tags=["Films"],
-    dependencies=[Depends(save_storage_state)],
+    dependencies=[
+        Depends(api_token_required),
+        Depends(save_storage_state),
+    ],
 )
 
 
