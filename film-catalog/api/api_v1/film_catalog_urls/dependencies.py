@@ -4,7 +4,7 @@ from typing import (
 )
 
 from fastapi import (
-    Query,
+    Header,
     Request,
     BackgroundTasks,
     HTTPException,
@@ -65,13 +65,12 @@ def api_token_required(
     request: Request,
     api_token: Annotated[
         str,
-        Query(),
+        Header(alias="x-auth-token"),
     ] = "",
 ):
     """Проверяет наличие в запросе корректного токена."""
     if request.method in UNSAFE_METHODS and api_token not in API_TOKENS:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
         )
-    yield
