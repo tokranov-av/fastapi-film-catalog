@@ -4,11 +4,15 @@ from typing import (
 )
 
 from fastapi import (
-    Header,
+    Depends,
     Request,
     BackgroundTasks,
     HTTPException,
     status,
+)
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
 )
 
 from core.config import (
@@ -30,6 +34,12 @@ UNSAFE_METHODS = frozenset(
         "PATCH",
         "DELETE",
     }
+)
+
+static_api_token = HTTPBearer(
+    scheme_name="Static API token",
+    description="Your **Static API token** from the developer portal. [Read more](#)",
+    auto_error=False,
 )
 
 
@@ -64,12 +74,21 @@ def save_storage_state(
 def api_token_required(
     request: Request,
     api_token: Annotated[
-        str,
-        Header(alias="x-auth-token"),
-    ] = "",
+        HTTPAuthorizationCredentials | None,
+        Depends(static_api_token),
+    ] = None,
 ):
     """Проверяет наличие в запросе корректного токена."""
-    if request.method in UNSAFE_METHODS and api_token not in API_TOKENS:
+    if request.method not in UNSAFE_METHODS:
+        return
+
+    if api_token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API token is required",
+        )
+
+    if api_token.credentials not in API_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
