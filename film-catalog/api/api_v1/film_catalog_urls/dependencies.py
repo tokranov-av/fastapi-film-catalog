@@ -80,7 +80,7 @@ def save_storage_state(
         )
 
 
-def api_token_required(
+def api_token_required_for_unsafe_methods(
     request: Request,
     api_token: Annotated[
         HTTPAuthorizationCredentials | None,
@@ -104,7 +104,7 @@ def api_token_required(
         )
 
 
-def user_basic_auth_required(
+def user_basic_auth_required_for_unsafe_methods(
     request: Request,
     credentials: Annotated[
         HTTPBasicCredentials | None,
