@@ -13,10 +13,13 @@ from fastapi import (
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
+    HTTPBasic,
+    HTTPBasicCredentials,
 )
 
 from core.config import (
     API_TOKENS,
+    USERS_DB,
 )
 from schemas.film import (
     Film,
@@ -39,6 +42,12 @@ UNSAFE_METHODS = frozenset(
 static_api_token = HTTPBearer(
     scheme_name="Static API token",
     description="Your **Static API token** from the developer portal. [Read more](#)",
+    auto_error=False,
+)
+
+user_basic_auth = HTTPBasic(
+    scheme_name="Basic Auth",
+    description="Basic username + password auth",
     auto_error=False,
 )
 
@@ -93,3 +102,27 @@ def api_token_required(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
         )
+
+
+def user_basic_auth_required(
+    request: Request,
+    credentials: Annotated[
+        HTTPBasicCredentials | None,
+        Depends(user_basic_auth),
+    ] = None,
+):
+    if request.method not in UNSAFE_METHODS:
+        return
+
+    if (
+        credentials
+        and credentials.username in USERS_DB
+        and USERS_DB[credentials.username] == credentials.password
+    ):
+        return
+
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="User credentials required. Invalid username or password.",
+        headers={"WWW-Authenticate": "Basic"},
+    )

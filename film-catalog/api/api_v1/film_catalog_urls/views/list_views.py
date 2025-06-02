@@ -7,6 +7,7 @@ from fastapi import (
 from api.api_v1.film_catalog_urls.dependencies import (
     api_token_required,
     save_storage_state,
+    user_basic_auth_required,
 )
 from schemas.film import (
     Film,
@@ -21,8 +22,9 @@ router = APIRouter(
     prefix="/films",
     tags=["Films"],
     dependencies=[
-        Depends(api_token_required),
+        # Depends(api_token_required),
         Depends(save_storage_state),
+        Depends(user_basic_auth_required),
     ],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
