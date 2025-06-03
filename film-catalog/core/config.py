@@ -13,7 +13,7 @@ LOG_FORMAT: str = (
 # Only fake values.
 API_TOKENS: frozenset[str] = frozenset(
     {
-        "OJWZfS81e-XB-LuPdlJYGw",
+        "j5qMrWZ0UeFvF8LN9WlSSw",
         "gVWPhWAvNbduNKSE7MObew",
     }
 )

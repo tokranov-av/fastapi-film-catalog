@@ -5,9 +5,8 @@ from fastapi import (
 )
 
 from api.api_v1.film_catalog_urls.dependencies import (
-    # api_token_required_for_unsafe_methods,
     save_storage_state,
-    user_basic_auth_required_for_unsafe_methods,
+    api_token_or_user_basic_auth_required_for_unsafe_methods,
 )
 from schemas.film import (
     Film,
@@ -22,9 +21,8 @@ router = APIRouter(
     prefix="/films",
     tags=["Films"],
     dependencies=[
-        # Depends(api_token_required_for_unsafe_methods),
         Depends(save_storage_state),
-        Depends(user_basic_auth_required_for_unsafe_methods),
+        Depends(api_token_or_user_basic_auth_required_for_unsafe_methods),
     ],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
