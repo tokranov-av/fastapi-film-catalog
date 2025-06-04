@@ -9,14 +9,6 @@ LOG_FORMAT: str = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 )
 
-# Never store real tokens here!
-# Only fake values.
-API_TOKENS: frozenset[str] = frozenset(
-    {
-        "j5qMrWZ0UeFvF8LN9WlSSw",
-        "gVWPhWAvNbduNKSE7MObew",
-    }
-)
 # Only for demo!
 # no real users in code!
 USERS_DB: dict[str, str] = {
@@ -28,3 +20,6 @@ USERS_DB: dict[str, str] = {
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_DB = 0
+REDIS_DB_TOKENS = 1
+
+REDIS_TOKENS_SET_NAME = "tokens"
