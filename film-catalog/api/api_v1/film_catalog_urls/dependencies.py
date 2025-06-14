@@ -18,7 +18,6 @@ from fastapi.security import (
 )
 
 from core.config import (
-    REDIS_TOKENS_SET_NAME,
     USERS_DB,
 )
 from schemas.film import (
@@ -86,8 +85,7 @@ def save_storage_state(
 def validate_api_token(
     api_token: HTTPAuthorizationCredentials,
 ):
-    if redis_tokens.sismember(
-        REDIS_TOKENS_SET_NAME,
+    if redis_tokens.token_exists(
         api_token.credentials,
     ):
         return
