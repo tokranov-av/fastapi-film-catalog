@@ -52,11 +52,11 @@ def get_list_of_films() -> list[Film]:
     status_code=status.HTTP_201_CREATED,
     responses={
         status.HTTP_409_CONFLICT: {
-            "description": "Record creation conflict.",
+            "description": "Film with such slug already exists.",
             "content": {
                 "application/json": {
                     "example": {
-                        "detail": "Film with slug = 'slug' already exists.",
+                        "detail": "Film with slug = 'name' already exists.",
                     },
                 },
             },
