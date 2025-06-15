@@ -41,6 +41,13 @@ class FilmStorage(BaseModel):
 
         return cls.model_validate_json(FILMS_STORAGE_FILEPATH.read_text())
 
+    def save_film(self, film: Film) -> None:
+        redis.hset(
+            name=config.REDIS_FILMS_HASH_NAME,
+            key=film.slug,
+            value=film.model_dump_json(),
+        )
+
     def get(self) -> list[Film]:
         return [
             Film.model_validate_json(film)
@@ -61,11 +68,7 @@ class FilmStorage(BaseModel):
         film = Film(
             **film_create.model_dump(),
         )
-        redis.hset(
-            name=config.REDIS_FILMS_HASH_NAME,
-            key=film.slug,
-            value=film.model_dump_json(),
-        )
+        self.save_film(film=film)
         log.info("Создано описание фильма '%s' ", film.name)
 
         return film
@@ -83,6 +86,7 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in:
             setattr(film, field_name, value)
+        self.save_film(film=film)
 
         return film
 
@@ -93,6 +97,7 @@ class FilmStorage(BaseModel):
     ) -> Film:
         for field_name, value in film_in.model_dump(exclude_unset=True).items():
             setattr(film, field_name, value)
+        self.save_film(film=film)
 
         return film
 
