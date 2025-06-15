@@ -1,12 +1,13 @@
-from contextlib import asynccontextmanager
+from contextlib import (
+    asynccontextmanager,
+)
 
-from fastapi import FastAPI
-
-from api.api_v1.film_catalog_urls.crud import storage
+from fastapi import (
+    FastAPI,
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    storage.init_storage_from_state()
 
     yield

@@ -2,12 +2,14 @@ import logging
 
 from pydantic import (
     BaseModel,
-    ValidationError,
 )
-from redis import Redis
+from redis import (
+    Redis,
+)
 
-from core import config
-from core.config import FILMS_STORAGE_FILEPATH
+from core import (
+    config,
+)
 from schemas.film import (
     Film,
     FilmCreate,
@@ -26,20 +28,6 @@ redis = Redis(
 
 
 class FilmStorage(BaseModel):
-    slug_to_film: dict[str, Film] = {}
-
-    def save_state(self) -> None:
-        FILMS_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
-        log.info(f"Информация о фильме сохранена.")
-
-    @classmethod
-    def from_state(cls) -> "FilmStorage":
-        if not FILMS_STORAGE_FILEPATH.exists():
-            log.info("Файл хранилища отсутствует")
-
-            return FilmStorage()
-
-        return cls.model_validate_json(FILMS_STORAGE_FILEPATH.read_text())
 
     def save_film(self, film: Film) -> None:
         redis.hset(
@@ -103,18 +91,6 @@ class FilmStorage(BaseModel):
         self.save_film(film=film)
 
         return film
-
-    def init_storage_from_state(self) -> None:
-        try:
-            data = self.from_state()
-        except ValidationError:
-            self.save_state()
-            log.warning("Перезаписан файл хранилища из-за ошибки проверки")
-        else:
-            self.slug_to_film.update(
-                data.slug_to_film,
-            )
-            log.info("Хранилище заполнено данными из файла хранилища")
 
 
 storage = FilmStorage()
