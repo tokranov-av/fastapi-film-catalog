@@ -14,6 +14,7 @@ from schemas.film import (
     FilmRead,
 )
 from api.api_v1.film_catalog_urls.crud import (
+    FilmAlreadyExistsError,
     storage,
 )
 
@@ -66,10 +67,10 @@ def get_list_of_films() -> list[Film]:
 def create_film(
     film_create: FilmCreate,
 ) -> Film:
-    if not storage.get_by_slug(film_create.slug):
-        return storage.create(film_create)
-
-    raise HTTPException(
-        status_code=status.HTTP_409_CONFLICT,
-        detail=f"Film with slug = {film_create.slug!r} already exists.",
-    )
+    try:
+        return storage.create_or_raise_if_exists(film_create)
+    except FilmAlreadyExistsError:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Film with slug = {film_create.slug!r} already exists.",
+        ) from None

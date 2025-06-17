@@ -27,6 +27,14 @@ redis = Redis(
 )
 
 
+class FilmBaseError(Exception):
+    """Base exception for film CRUD actions."""
+
+
+class FilmAlreadyExistsError(FilmBaseError):
+    """Raised when a film already exists."""
+
+
 class FilmStorage(BaseModel):
 
     def save_film(self, film: Film) -> None:
@@ -52,6 +60,12 @@ class FilmStorage(BaseModel):
 
         return film
 
+    def exists(self, slug: str) -> bool:
+        return redis.hexists(
+            name=config.REDIS_FILMS_HASH_NAME,
+            key=slug,
+        )
+
     def create(self, film_create: FilmCreate) -> Film:
         film = Film(
             **film_create.model_dump(),
@@ -60,6 +74,14 @@ class FilmStorage(BaseModel):
         log.info("Создано описание фильма '%s' ", film.name)
 
         return film
+
+    def create_or_raise_if_exists(self, film_create: FilmCreate) -> Film:
+        if not self.exists(film_create.slug):
+            return self.create(film_create)
+
+        raise FilmAlreadyExistsError(
+            f"Film with slug {film_create.slug} already exists"
+        )
 
     def delete_by_slug(self, slug: str) -> None:
         redis.hdel(
