@@ -9,7 +9,7 @@ app = typer.Typer(
 )
 
 
-@app.command(help="[red]Greet user by [bold]name[/bold][/red]")
+@app.command(help="[blue]Greet user by [bold]name[/bold][/blue]")
 def hello(
     name: Annotated[
         str,
