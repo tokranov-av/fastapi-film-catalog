@@ -51,3 +51,12 @@ class AbstractTokensHelper(ABC):
 
         :return:
         """
+
+    @abstractmethod
+    def delete_token(self, token: str) -> None:
+        """
+        Deletes a token.
+
+        :param token:
+        :return:
+        """
