@@ -35,7 +35,7 @@ class FilmUpdate(FilmBase):
     """Модель для обновления информации о фильме."""
 
 
-class FilmPartialUpdate(FilmBase):
+class FilmPartialUpdate(BaseModel):
     """Модель для частичного обновления информации о фильме."""
 
     name: StringMinLen1 | None = None
