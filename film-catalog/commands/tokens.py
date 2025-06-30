@@ -1,3 +1,5 @@
+__all__ = ("app",)
+
 from typing import Annotated
 
 from rich.markdown import Markdown
