@@ -16,9 +16,9 @@ from api.api_v1.film_catalog_urls.dependencies import (
 )
 from schemas.film import (
     Film,
-    FilmUpdate,
     FilmPartialUpdate,
     FilmRead,
+    FilmUpdate,
 )
 
 router = APIRouter(

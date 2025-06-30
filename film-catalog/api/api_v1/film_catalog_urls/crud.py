@@ -16,8 +16,8 @@ from core import (
 from schemas.film import (
     Film,
     FilmCreate,
-    FilmUpdate,
     FilmPartialUpdate,
+    FilmUpdate,
 )
 
 log = logging.getLogger(__name__)

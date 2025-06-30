@@ -2,9 +2,9 @@ __all__ = ("app",)
 
 from typing import Annotated
 
-from rich.markdown import Markdown
 import typer
 from rich import print
+from rich.markdown import Markdown
 
 from api.api_v1.auth.services import (
     redis_tokens as tokens,

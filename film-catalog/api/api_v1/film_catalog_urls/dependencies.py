@@ -5,26 +5,27 @@ from typing import (
 
 from fastapi import (
     Depends,
-    Request,
     HTTPException,
+    Request,
     status,
 )
 from fastapi.security import (
     HTTPAuthorizationCredentials,
-    HTTPBearer,
     HTTPBasic,
     HTTPBasicCredentials,
+    HTTPBearer,
 )
 
-from schemas.film import (
-    Film,
-)
-from .crud import (
-    storage,
-)
 from api.api_v1.auth.services import (
     redis_tokens,
     redis_users,
+)
+from schemas.film import (
+    Film,
+)
+
+from .crud import (
+    storage,
 )
 
 log = logging.getLogger(__name__)

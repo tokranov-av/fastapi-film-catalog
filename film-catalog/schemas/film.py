@@ -2,10 +2,10 @@ from datetime import datetime
 from typing import Annotated
 
 from annotated_types import (
-    MaxLen,
-    MinLen,
     Gt,
     Lt,
+    MaxLen,
+    MinLen,
 )
 from pydantic import BaseModel
 
