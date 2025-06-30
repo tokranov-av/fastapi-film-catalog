@@ -86,7 +86,7 @@ class FilmStorage(BaseModel):
             return self.create(film_create)
 
         raise FilmAlreadyExistsError(
-            f"Film with slug {film_create.slug} already exists"
+            f"Film with slug {film_create.slug} already exists",
         )
 
     def delete_by_slug(self, slug: str) -> None:
