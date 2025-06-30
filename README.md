@@ -8,9 +8,21 @@
 
 Выделите директорию -> Нажмите правую кнопку мыши -> Mark Directory as -> Sources Root
 
+Установка пакетов:
+```shell
+uv install
+```
+
+### Конфигурация pre-commit
+
+Установка pre-commit хук:
+```shell
+pre-commit install
+```
+
 ### Запуск
 
-Перейдите в директорию film-catalog: 
+Перейдите в директорию film-catalog:
 ```shell
 cd film-catalog
 ```
@@ -20,9 +32,8 @@ cd film-catalog
 fastapi dev
 ```
 
-## Snippets
+## Сниппеты
 
 ```shell
 python -c 'import secrets; print(secrets.token_urlsafe(16))'
 ```
-
