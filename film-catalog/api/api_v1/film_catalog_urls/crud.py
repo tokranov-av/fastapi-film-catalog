@@ -1,4 +1,5 @@
 import logging
+from typing import cast
 
 from pydantic import (
     BaseModel,
@@ -51,19 +52,22 @@ class FilmStorage(BaseModel):
         ]
 
     def get_by_slug(self, slug: str) -> Film | None:
-        film = redis.hget(
+        if data := redis.hget(
             name=config.REDIS_FILMS_HASH_NAME,
             key=slug,
-        )
-        if film is not None:
-            film = Film.model_validate_json(film)
+        ):
+            assert isinstance(data, str)
+            return Film.model_validate_json(data)
 
-        return film
+        return None
 
     def exists(self, slug: str) -> bool:
-        return redis.hexists(
-            name=config.REDIS_FILMS_HASH_NAME,
-            key=slug,
+        return cast(
+            bool,
+            redis.hexists(
+                name=config.REDIS_FILMS_HASH_NAME,
+                key=slug,
+            ),
         )
 
     def create(self, film_create: FilmCreate) -> Film:

@@ -60,7 +60,7 @@ def read_movie_description(
 def update_movie_description(
     film: FilmBySlug,
     film_in: FilmUpdate,
-):
+) -> Film:
     return storage.update(
         film=film,
         film_in=film_in,
@@ -74,7 +74,7 @@ def update_movie_description(
 def update_movie_description_partial(
     film: FilmBySlug,
     film_in: FilmPartialUpdate,
-):
+) -> Film:
     return storage.update_partial(
         film=film,
         film_in=film_in,
