@@ -42,7 +42,7 @@ def check(
 def list_tokens() -> None:
     """List all tokens."""
     print(Markdown("# Available API tokens"))
-    print(Markdown("\n- ".join([""] + tokens.get_tokens())))
+    print(Markdown("\n- ".join(["", *tokens.get_tokens()])))
     print()
 
 

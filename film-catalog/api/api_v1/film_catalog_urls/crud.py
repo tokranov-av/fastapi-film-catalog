@@ -85,9 +85,8 @@ class FilmStorage(BaseModel):
         if not self.exists(film_create.slug):
             return self.create(film_create)
 
-        raise FilmAlreadyExistsError(
-            f"Film with slug {film_create.slug} already exists",
-        )
+        msg = f"Film with slug {film_create.slug} already exists"
+        raise FilmAlreadyExistsError(msg)
 
     def delete_by_slug(self, slug: str) -> None:
         redis.hdel(
