@@ -1,4 +1,5 @@
 import logging
+from zoneinfo import ZoneInfo
 
 LOG_LEVEL = logging.INFO
 LOG_FORMAT: str = (
@@ -15,3 +16,5 @@ REDIS_DB_FILMS = 3
 
 REDIS_TOKENS_SET_NAME = "tokens"
 REDIS_FILMS_HASH_NAME = "films"
+
+TIME_ZONE = ZoneInfo("Europe/Moscow")

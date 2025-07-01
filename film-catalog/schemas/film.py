@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Annotated
-from zoneinfo import ZoneInfo
 
 from annotated_types import (
     Gt,
@@ -10,13 +9,15 @@ from annotated_types import (
 )
 from pydantic import BaseModel
 
-timezone = ZoneInfo("Europe/Moscow")
+from core.config import TIME_ZONE
 
 StringMinLen1 = Annotated[str, MinLen(1)]
 StringMinLen3 = Annotated[str, MinLen(3)]
 StringMaxLen1000 = Annotated[str, MaxLen(1000)]
 IntegerGt1900LtNow = Annotated[
-    int, Gt(1900), Lt(datetime.now(tz=timezone).year + 1),
+    int,
+    Gt(1900),
+    Lt(datetime.now(tz=TIME_ZONE).year + 1),
 ]
 
 
