@@ -11,30 +11,29 @@ from pydantic import BaseModel
 
 from core.config import TIME_ZONE
 
-StringMinLen1 = Annotated[str, MinLen(1)]
 StringMinLen3 = Annotated[str, MinLen(3)]
 StringMaxLen1000 = Annotated[str, MaxLen(1000)]
 IntegerGt1900LtNow = Annotated[
     int,
     Gt(1900),
-    Lt(datetime.now(tz=TIME_ZONE).year + 1),
+    Lt(datetime.now(tz=TIME_ZONE).year + 10),
 ]
 
 
 class FilmBase(BaseModel):
     """Базовая модель информации о фильме."""
 
-    name: StringMinLen1
+    name: StringMinLen3
     description: StringMaxLen1000
     production_year: IntegerGt1900LtNow
     country: StringMinLen3
-    genre: StringMinLen1
+    genre: StringMinLen3
 
 
 class FilmCreate(FilmBase):
     """Модель для создания информации о фильме."""
 
-    slug: StringMinLen1
+    slug: StringMinLen3
 
 
 class FilmUpdate(FilmBase):
@@ -44,11 +43,11 @@ class FilmUpdate(FilmBase):
 class FilmPartialUpdate(BaseModel):
     """Модель для частичного обновления информации о фильме."""
 
-    name: StringMinLen1 | None = None
+    name: StringMinLen3 | None = None
     description: StringMaxLen1000 | None = None
     production_year: IntegerGt1900LtNow | None = None
     country: StringMinLen3 | None = None
-    genre: StringMinLen1 | None = None
+    genre: StringMinLen3 | None = None
 
 
 class FilmRead(FilmBase):

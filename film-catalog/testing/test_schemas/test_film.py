@@ -2,7 +2,12 @@ from datetime import datetime
 from unittest import TestCase
 
 from core.config import TIME_ZONE
-from schemas.film import Film, FilmCreate, FilmUpdate
+from schemas.film import (
+    Film,
+    FilmCreate,
+    FilmPartialUpdate,
+    FilmUpdate,
+)
 
 
 class FilmSchemesTestCase(TestCase):
@@ -61,3 +66,40 @@ class FilmSchemesTestCase(TestCase):
         self.assertEqual(self.film.production_year, film_update.production_year)
         self.assertEqual(self.film.country, film_update.country)
         self.assertEqual(self.film.genre, film_update.genre)
+
+    def test_partial_update(self) -> None:
+        """Проверка частичного обновления экземпляра фильма."""
+        film_partial_update = FilmPartialUpdate(
+            name="Movie title",
+            description="Movie description",
+        )
+        film = self.film.model_copy()
+
+        for field_name, value in film_partial_update.model_dump(
+            exclude_unset=True,
+        ).items():
+            if hasattr(self.film, field_name):
+                setattr(self.film, field_name, value)
+
+        self.assertEqual(film_partial_update.name, self.film.name)
+        self.assertEqual(film_partial_update.description, self.film.description)
+        self.assertEqual(film.production_year, self.film.production_year)
+        self.assertEqual(film.country, self.film.country)
+        self.assertEqual(film.genre, self.film.genre)
+
+    def test_partial_update_with_empty_instance(self) -> None:
+        """Проверка частичного обновления экземпляра фильма с пустым экземпляром."""
+        film_partial_update = FilmPartialUpdate()
+        film = self.film.model_copy()
+
+        for field_name, value in film_partial_update.model_dump(
+            exclude_unset=True,
+        ).items():
+            if hasattr(self.film, field_name):
+                setattr(self.film, field_name, value)
+
+        self.assertEqual(film.name, self.film.name)
+        self.assertEqual(film.description, self.film.description)
+        self.assertEqual(film.production_year, self.film.production_year)
+        self.assertEqual(film.country, self.film.country)
+        self.assertEqual(film.genre, self.film.genre)
