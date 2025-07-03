@@ -69,23 +69,29 @@ class FilmSchemesTestCase(TestCase):
 
     def test_partial_update(self) -> None:
         """Проверка частичного обновления экземпляра фильма."""
-        film_partial_update = FilmPartialUpdate(
-            name="Movie title",
-            description="Movie description",
-        )
-        film = self.film.model_copy()
+        partial_updates = [
+            ("field name: name", FilmPartialUpdate(name="Movie title")),
+            (
+                "field name: description",
+                FilmPartialUpdate(description="Movie description"),
+            ),
+            ("field name: production_year", FilmPartialUpdate(production_year=2025)),
+            ("field name: country", FilmPartialUpdate(country="Country")),
+            ("field name: genre", FilmPartialUpdate(genre="Genre")),
+        ]
 
-        for field_name, value in film_partial_update.model_dump(
-            exclude_unset=True,
-        ).items():
-            if hasattr(self.film, field_name):
-                setattr(self.film, field_name, value)
+        for msg, partial_update in partial_updates:
+            with self.subTest(msg=msg):
+                for field_name, value in partial_update.model_dump(
+                    exclude_unset=True,
+                ).items():
+                    if hasattr(self.film, field_name):
+                        setattr(self.film, field_name, value)
 
-        self.assertEqual(film_partial_update.name, self.film.name)
-        self.assertEqual(film_partial_update.description, self.film.description)
-        self.assertEqual(film.production_year, self.film.production_year)
-        self.assertEqual(film.country, self.film.country)
-        self.assertEqual(film.genre, self.film.genre)
+                    self.assertEqual(
+                        getattr(partial_update, field_name),
+                        getattr(self.film, field_name),
+                    )
 
     def test_partial_update_with_empty_instance(self) -> None:
         """Проверка частичного обновления экземпляра фильма с пустым экземпляром."""
