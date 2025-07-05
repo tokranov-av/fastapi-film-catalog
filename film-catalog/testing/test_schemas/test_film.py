@@ -1,6 +1,8 @@
 from datetime import datetime
 from unittest import TestCase
 
+from pydantic import ValidationError
+
 from core.config import TIME_ZONE
 from schemas.film import (
     Film,
@@ -109,3 +111,36 @@ class FilmSchemesTestCase(TestCase):
         self.assertEqual(film.production_year, self.film.production_year)
         self.assertEqual(film.country, self.film.country)
         self.assertEqual(film.genre, self.film.genre)
+
+    def test_film_create_slug_too_short(self) -> None:
+        """Проверяет выброс исключения при слишком коротком слаге."""
+        with self.assertRaises(ValidationError) as exc_info:
+            FilmCreate(
+                name="sl",
+                description="Some description",
+                production_year=datetime.now(tz=TIME_ZONE).year,
+                country="Россия",
+                genre="Семейный",
+                slug="some-slug",
+            )
+
+        error_details = exc_info.exception.errors()[0]
+        expected_type = "string_too_short"
+        self.assertEqual(
+            expected_type,
+            error_details["type"],
+        )
+
+    def test_film_create_slug_too_short_with_regex(self) -> None:
+        with self.assertRaisesRegex(
+            ValidationError,
+            expected_regex="String should have at least 3 characters",
+        ):
+            FilmCreate(
+                name="sl",
+                description="Some description",
+                production_year=datetime.now(tz=TIME_ZONE).year,
+                country="Россия",
+                genre="Семейный",
+                slug="some-slug",
+            )
