@@ -1,6 +1,7 @@
 import random
 import string
 from datetime import datetime
+from typing import ClassVar
 from unittest import TestCase
 
 from api.api_v1.film_catalog_urls.crud import storage
@@ -13,32 +14,38 @@ from schemas.film import (
 )
 
 
+def random_string(length: int = 8) -> str:
+    """Возвращает случайную строку из букв ascii_letters заданной длины."""
+    return "".join(
+        random.choices(  # noqa: S311
+            string.ascii_letters,
+            k=length,
+        ),
+    )
+
+
+def create_film() -> Film:
+    """Создает и сохраняет фильм в хранилище."""
+    film_create = FilmCreate(
+        name=random_string(),
+        description=random_string(),
+        production_year=datetime.now(tz=TIME_ZONE).year,
+        country=random_string(),
+        genre=random_string(),
+        slug=random_string(),
+    )
+
+    return storage.create(film_create)
+
+
 class FilmStorageUpdateTestCase(TestCase):
     def setUp(self) -> None:
-        self.film = self.create_film()
+        self.film = create_film()
         self.expected_description = "Another description"
         self.expected_genre = "Another genre"
 
     def tearDown(self) -> None:
         storage.delete(self.film)
-
-    @classmethod
-    def create_film(cls) -> Film:
-        film_create = FilmCreate(
-            name="Some name",
-            description="Some description",
-            production_year=datetime.now(tz=TIME_ZONE).year,
-            country="Some country",
-            genre="Some genre",
-            slug="".join(
-                random.choices(  # noqa: S311
-                    string.ascii_letters,
-                    k=8,
-                ),
-            ),
-        )
-
-        return storage.create(film_create)
 
     def test_update(self) -> None:
         film_update = FilmUpdate(**self.film.model_dump())
@@ -68,3 +75,37 @@ class FilmStorageUpdateTestCase(TestCase):
         self.assertEqual(self.expected_description, partial_updated_film.description)
         self.assertEqual(self.expected_genre, partial_updated_film.genre)
         self.assertEqual(expected_name, partial_updated_film.name)
+
+
+class FilmStorageGetFilmsTestCase(TestCase):
+    FILMS_COUNT = 3
+    films: ClassVar[list[Film]] = []
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.films = [create_film() for _ in range(cls.FILMS_COUNT)]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        for film in cls.films:
+            storage.delete(film)
+
+    def test_get_list(self) -> None:
+        expected_slugs = {film.slug for film in self.films}
+        expected_diff = set[str]()
+
+        films = storage.get()
+        films_slugs = {film.slug for film in films}
+        diff = expected_slugs - films_slugs
+
+        self.assertEqual(expected_diff, diff)
+
+    def test_get_by_slug(self) -> None:
+        for film in self.films:
+            with self.subTest(
+                slug=film.slug,
+                msg=f"Validate can get slug {film.slug!r}",
+            ):
+                db_film = storage.get_by_slug(slug=film.slug)
+
+                self.assertEqual(db_film, film)
