@@ -11,6 +11,6 @@ def read_root(
     docs_url = request.url.replace(path="/docs", query="")
 
     return {
-        "message": f"Hello, {name}",
+        "message": f"Hello, {name}!",
         "docs": str(docs_url),
     }
