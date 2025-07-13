@@ -4,7 +4,12 @@ from datetime import datetime
 from typing import ClassVar
 from unittest import TestCase
 
-from api.api_v1.film_catalog_urls.crud import storage
+import pytest
+
+from api.api_v1.film_catalog_urls.crud import (
+    FilmAlreadyExistsError,
+    storage,
+)
 from core.config import TIME_ZONE
 from schemas.film import (
     Film,
@@ -109,3 +114,14 @@ class FilmStorageGetFilmsTestCase(TestCase):
                 db_film = storage.get_by_slug(slug=film.slug)
 
                 self.assertEqual(db_film, film)
+
+
+def test_create_or_raise_if_exists() -> None:
+    existing_film = create_film()
+    film_create = FilmCreate(**existing_film.model_dump())
+
+    with pytest.raises(
+        FilmAlreadyExistsError,
+        match=existing_film.slug,
+    ):
+        storage.create_or_raise_if_exists(film_create)
