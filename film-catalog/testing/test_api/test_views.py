@@ -1,3 +1,4 @@
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
@@ -7,8 +8,26 @@ client = TestClient(app=app)
 
 
 def test_root_view() -> None:
-    # TODO: fake data
-    name = "John"
+    expected_message = "Hello, World!"
+
+    response = client.get("/")
+
+    response_data = response.json()
+    assert response.status_code == status.HTTP_200_OK
+    assert response_data["message"] == expected_message, response_data
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        # TODO: fake data
+        "John",
+        "",
+        "John Smith",
+        "!$#%&",
+    ],
+)
+def test_root_view_custom_name(name: str) -> None:
     query = {"name": name}
     expected_message = f"Hello, {name}!"
 
