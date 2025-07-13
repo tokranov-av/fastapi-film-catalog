@@ -123,5 +123,7 @@ def test_create_or_raise_if_exists() -> None:
     with pytest.raises(
         FilmAlreadyExistsError,
         match=existing_film.slug,
-    ):
+    ) as exc_info:
         storage.create_or_raise_if_exists(film_create)
+
+    assert film_create.slug in exc_info.value.args[0]
