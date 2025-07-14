@@ -1,7 +1,8 @@
 import random
 import string
+from collections.abc import Generator
 from datetime import datetime
-from typing import ClassVar
+from typing import Any, ClassVar
 from unittest import TestCase
 
 import pytest
@@ -44,8 +45,12 @@ def create_film() -> Film:
 
 
 @pytest.fixture
-def film() -> Film:
-    return create_film()
+def film() -> Generator[Film, Any]:
+    film = create_film()
+
+    yield film
+
+    storage.delete(film)
 
 
 class FilmStorageUpdateTestCase(TestCase):
