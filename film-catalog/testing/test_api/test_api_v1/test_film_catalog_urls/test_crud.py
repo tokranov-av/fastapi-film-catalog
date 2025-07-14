@@ -43,6 +43,11 @@ def create_film() -> Film:
     return storage.create(film_create)
 
 
+@pytest.fixture
+def film() -> Film:
+    return create_film()
+
+
 class FilmStorageUpdateTestCase(TestCase):
     def setUp(self) -> None:
         self.film = create_film()
@@ -116,13 +121,12 @@ class FilmStorageGetFilmsTestCase(TestCase):
                 self.assertEqual(db_film, film)
 
 
-def test_create_or_raise_if_exists() -> None:
-    existing_film = create_film()
-    film_create = FilmCreate(**existing_film.model_dump())
+def test_create_or_raise_if_exists(film: Film) -> None:
+    film_create = FilmCreate(**film.model_dump())
 
     with pytest.raises(
         FilmAlreadyExistsError,
-        match=existing_film.slug,
+        match=film.slug,
     ) as exc_info:
         storage.create_or_raise_if_exists(film_create)
 
