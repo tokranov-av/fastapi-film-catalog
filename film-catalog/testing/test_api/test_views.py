@@ -2,12 +2,8 @@ import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from main import app
 
-client = TestClient(app=app)
-
-
-def test_root_view() -> None:
+def test_root_view(client: TestClient) -> None:
     expected_message = "Hello, World!"
 
     response = client.get("/")
@@ -27,7 +23,10 @@ def test_root_view() -> None:
         "!$#%&",
     ],
 )
-def test_root_view_custom_name(name: str) -> None:
+def test_root_view_custom_name(
+    name: str,
+    client: TestClient,
+) -> None:
     query = {"name": name}
     expected_message = f"Hello, {name}!"
 
