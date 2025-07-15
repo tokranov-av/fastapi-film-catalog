@@ -1,4 +1,4 @@
-__all__ = ("storage",)
+__all__ = ("FilmAlreadyExistsError", "storage")
 
 import logging
 from typing import cast
@@ -39,7 +39,6 @@ class FilmAlreadyExistsError(FilmBaseError):
 
 
 class FilmStorage(BaseModel):
-
     def save_film(self, film: Film) -> None:
         redis.hset(
             name=config.REDIS_FILMS_HASH_NAME,

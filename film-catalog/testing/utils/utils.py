@@ -1,0 +1,33 @@
+__all__ = ("create_film", "get_random_string")
+
+import random
+import string
+from datetime import datetime
+
+from api.api_v1.film_catalog_urls.crud import storage
+from core.config import TIME_ZONE
+from schemas.film import Film, FilmCreate
+
+
+def get_random_string(length: int = 8) -> str:
+    """Возвращает случайную строку из букв ascii_letters заданной длины."""
+    return "".join(
+        random.choices(  # noqa: S311
+            string.ascii_letters,
+            k=length,
+        ),
+    )
+
+
+def create_film() -> Film:
+    """Создает и сохраняет фильм в хранилище."""
+    film_create = FilmCreate(
+        name=get_random_string(),
+        description=get_random_string(),
+        production_year=datetime.now(tz=TIME_ZONE).year,
+        country=get_random_string(),
+        genre=get_random_string(),
+        slug=get_random_string(),
+    )
+
+    return storage.create(film_create)

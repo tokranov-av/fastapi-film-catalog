@@ -1,7 +1,4 @@
-import random
-import string
 from collections.abc import Generator
-from datetime import datetime
 from typing import ClassVar
 from unittest import TestCase
 
@@ -11,37 +8,15 @@ from api.api_v1.film_catalog_urls.crud import (
     FilmAlreadyExistsError,
     storage,
 )
-from core.config import TIME_ZONE
 from schemas.film import (
     Film,
     FilmCreate,
     FilmPartialUpdate,
     FilmUpdate,
 )
-
-
-def random_string(length: int = 8) -> str:
-    """Возвращает случайную строку из букв ascii_letters заданной длины."""
-    return "".join(
-        random.choices(  # noqa: S311
-            string.ascii_letters,
-            k=length,
-        ),
-    )
-
-
-def create_film() -> Film:
-    """Создает и сохраняет фильм в хранилище."""
-    film_create = FilmCreate(
-        name=random_string(),
-        description=random_string(),
-        production_year=datetime.now(tz=TIME_ZONE).year,
-        country=random_string(),
-        genre=random_string(),
-        slug=random_string(),
-    )
-
-    return storage.create(film_create)
+from testing.utils import (
+    create_film,
+)
 
 
 @pytest.fixture
