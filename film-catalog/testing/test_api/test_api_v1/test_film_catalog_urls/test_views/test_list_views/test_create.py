@@ -5,7 +5,10 @@ from fastapi.testclient import TestClient
 
 from core.config import TIME_ZONE
 from main import app
-from schemas.film import FilmCreate
+from schemas.film import (
+    Film,
+    FilmCreate,
+)
 from testing.utils import get_random_string
 
 
@@ -27,3 +30,16 @@ def test_create_film(client_with_token: TestClient) -> None:
     response_data = response.json()
 
     assert response_data == film_create, response_data
+
+
+def test_create_film_already_exists(client_with_token: TestClient, film: Film) -> None:
+    url = app.url_path_for("create_film")
+
+    response = client_with_token.post(url=url, json=film.model_dump())
+
+    assert response.status_code == status.HTTP_409_CONFLICT, response.text
+
+    expected_message = f"Film with slug = {film.slug!r} already exists."
+    response_data = response.json()
+
+    assert response_data["detail"] == expected_message, response.text
