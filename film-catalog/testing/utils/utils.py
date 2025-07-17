@@ -19,7 +19,9 @@ def get_random_string(length: int = 8) -> str:
     )
 
 
-def create_film() -> Film:
+def create_film(
+    slug: str | None = None,
+) -> Film:
     """Создает и сохраняет фильм в хранилище."""
     film_create = FilmCreate(
         name=get_random_string(),
@@ -27,7 +29,7 @@ def create_film() -> Film:
         production_year=datetime.now(tz=TIME_ZONE).year,
         country=get_random_string(),
         genre=get_random_string(),
-        slug=get_random_string(),
+        slug=slug or get_random_string(),
     )
 
     return storage.create(film_create)

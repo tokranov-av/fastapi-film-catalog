@@ -22,7 +22,7 @@ from schemas.film import (
 )
 
 router = APIRouter(
-    prefix="/slug",
+    prefix="/{slug}",
     responses={
         status.HTTP_404_NOT_FOUND: {
             "description": "Film not found",
@@ -47,7 +47,7 @@ FilmBySlug = Annotated[
     path="/",
     response_model=FilmRead,
 )
-def read_movie_description(
+def read_film(
     film: FilmBySlug,
 ) -> Film:
     return film
@@ -57,7 +57,7 @@ def read_movie_description(
     path="/",
     response_model=FilmRead,
 )
-def update_movie_description(
+def update_film(
     film: FilmBySlug,
     film_in: FilmUpdate,
 ) -> Film:
@@ -71,7 +71,7 @@ def update_movie_description(
     path="/",
     response_model=FilmRead,
 )
-def update_movie_description_partial(
+def update_film_partial(
     film: FilmBySlug,
     film_in: FilmPartialUpdate,
 ) -> Film:
@@ -85,7 +85,7 @@ def update_movie_description_partial(
     path="/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_movie_description(
+def delete_film(
     film: FilmBySlug,
 ) -> None:
     storage.delete(film=film)

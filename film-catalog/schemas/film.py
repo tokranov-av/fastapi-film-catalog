@@ -33,7 +33,7 @@ class FilmBase(BaseModel):
 class FilmCreate(FilmBase):
     """Модель для создания информации о фильме."""
 
-    slug: StringMinLen3
+    slug: Annotated[str, MinLen(3), MaxLen(20)]
 
 
 class FilmUpdate(FilmBase):
