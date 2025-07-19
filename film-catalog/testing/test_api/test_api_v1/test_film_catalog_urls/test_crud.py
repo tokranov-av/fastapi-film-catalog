@@ -15,20 +15,20 @@ from schemas.film import (
     FilmUpdate,
 )
 from testing.utils import (
-    create_film,
+    create_film_random_slug,
 )
 
 
 @pytest.fixture
 def film() -> Generator[Film]:
-    film = create_film()
+    film = create_film_random_slug()
     yield film
     storage.delete(film)
 
 
 class FilmStorageUpdateTestCase(TestCase):
     def setUp(self) -> None:
-        self.film = create_film()
+        self.film = create_film_random_slug()
         self.expected_description = "Another description"
         self.expected_genre = "Another genre"
 
@@ -71,7 +71,7 @@ class FilmStorageGetFilmsTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.films = [create_film() for _ in range(cls.FILMS_COUNT)]
+        cls.films = [create_film_random_slug() for _ in range(cls.FILMS_COUNT)]
 
     @classmethod
     def tearDownClass(cls) -> None:
