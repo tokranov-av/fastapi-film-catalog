@@ -9,39 +9,36 @@ from api.api_v1.film_catalog_urls.crud import storage
 from main import app
 from schemas import MAX_LENGTH_FOR_DESCRIPTION
 from schemas.film import Film
-from testing.utils import create_film
+from testing.utils import create_film_random_slug
 
 
 class TestUpdatePartial:
     @pytest.fixture
     def film(self, request: SubRequest) -> Generator[Film]:
-        slug, description = request.param
-        yield create_film(
-            slug=slug,
-            description=description,
-        )
-        storage.delete_by_slug(slug)
+        film = create_film_random_slug(description=request.param)
+        yield film
+        storage.delete_by_slug(film.slug)
 
     @pytest.mark.parametrize(
         "film, new_description",
         [
             pytest.param(
-                ("foo", "some description"),
+                "some description",
                 "",
                 id="some-description-to-no-description",
             ),
             pytest.param(
-                ("bar", ""),
+                "",
                 "some-description",
                 id="no-description-to-some-description",
             ),
             pytest.param(
-                ("max-to-min", "a" * MAX_LENGTH_FOR_DESCRIPTION),
+                "a" * MAX_LENGTH_FOR_DESCRIPTION,
                 "",
                 id="max-description-to-min-description",
             ),
             pytest.param(
-                ("min-to-max", ""),
+                "",
                 "a" * MAX_LENGTH_FOR_DESCRIPTION,
                 id="min-description-to-max-description",
             ),
