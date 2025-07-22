@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Annotated
 
 from annotated_types import (
@@ -9,14 +8,19 @@ from annotated_types import (
 )
 from pydantic import BaseModel
 
-from core.config import TIME_ZONE
+from schemas import (
+    MAX_LENGTH_FOR_DESCRIPTION,
+    MAX_YEAR,
+    MIN_LENGTH_STRING,
+    MIN_YEAR,
+)
 
-StringMinLen3 = Annotated[str, MinLen(3)]
-StringMaxLen1000 = Annotated[str, MaxLen(1000)]
+StringMinLen3 = Annotated[str, MinLen(MIN_LENGTH_STRING)]
+StringMaxLen1000 = Annotated[str, MaxLen(MAX_LENGTH_FOR_DESCRIPTION)]
 IntegerGt1900LtNow = Annotated[
     int,
-    Gt(1900),
-    Lt(datetime.now(tz=TIME_ZONE).year + 10),
+    Gt(MIN_YEAR),
+    Lt(MAX_YEAR),
 ]
 
 
