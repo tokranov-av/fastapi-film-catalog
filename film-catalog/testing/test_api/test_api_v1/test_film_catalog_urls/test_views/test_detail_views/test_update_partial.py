@@ -19,6 +19,7 @@ class TestUpdatePartial:
         yield film
         storage.delete_by_slug(film.slug)
 
+    @pytest.mark.apitest
     @pytest.mark.parametrize(
         "film, new_description",
         [

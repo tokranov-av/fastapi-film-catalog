@@ -14,7 +14,10 @@ from schemas.film import (
 )
 from testing.utils import build_film_create_random_slug, get_random_string
 
+pytestmark = pytest.mark.apitest
 
+
+@pytest.mark.apitest
 def test_create_film(client_with_token: TestClient) -> None:
     url = app.url_path_for("create_film")
     film_create = FilmCreate(
@@ -35,6 +38,7 @@ def test_create_film(client_with_token: TestClient) -> None:
     assert response_data == film_create, response_data
 
 
+@pytest.mark.apitest
 def test_create_film_already_exists(client_with_token: TestClient, film: Film) -> None:
     url = app.url_path_for("create_film")
 
@@ -69,6 +73,7 @@ class TestCreateInvalid:
 
         return data, err_type
 
+    @pytest.mark.apitest
     def test_invalid_slug(
         self,
         client_with_token: TestClient,

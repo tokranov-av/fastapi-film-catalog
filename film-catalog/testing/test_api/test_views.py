@@ -3,6 +3,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 
+@pytest.mark.apitest
 def test_root_view(client: TestClient) -> None:
     expected_message = "Hello, World!"
 

@@ -20,6 +20,7 @@ def film(request: SubRequest) -> Film:
     return create_film(slug=request.param)
 
 
+@pytest.mark.apitest
 def test_delete(
     client_with_token: TestClient,
     film: Film,

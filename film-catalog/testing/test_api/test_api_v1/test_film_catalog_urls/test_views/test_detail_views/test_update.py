@@ -11,6 +11,7 @@ from schemas.film import Film, FilmUpdate
 from testing.utils import create_film_random_slug
 
 
+@pytest.mark.apitest
 class TestUpdate:
     @pytest.fixture
     def film(self, request: SubRequest) -> Generator[Film]:
@@ -22,6 +23,7 @@ class TestUpdate:
         yield film
         storage.delete_by_slug(film.slug)
 
+    @pytest.mark.apitest
     @pytest.mark.parametrize(
         "film, updated_data",
         [
