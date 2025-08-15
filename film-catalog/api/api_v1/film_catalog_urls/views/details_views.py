@@ -89,3 +89,11 @@ def delete_film(
     film: FilmBySlug,
 ) -> None:
     storage.delete(film=film)
+
+
+@router.post(
+    path="/transfer/",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def transfer_movie(slug: str) -> None:
+    raise NotImplementedError
