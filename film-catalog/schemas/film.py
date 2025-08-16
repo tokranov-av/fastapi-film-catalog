@@ -24,7 +24,7 @@ IntegerGt1900LtNow = Annotated[
 ]
 
 
-class FilmBase(BaseModel):
+class MovieBase(BaseModel):
     """Базовая модель информации о фильме."""
 
     name: StringMinLen3
@@ -34,17 +34,17 @@ class FilmBase(BaseModel):
     genre: StringMinLen3
 
 
-class FilmCreate(FilmBase):
+class MovieCreate(MovieBase):
     """Модель для создания информации о фильме."""
 
     slug: Annotated[str, MinLen(3), MaxLen(20)]
 
 
-class FilmUpdate(FilmBase):
+class MovieUpdate(MovieBase):
     """Модель для обновления информации о фильме."""
 
 
-class FilmPartialUpdate(BaseModel):
+class MoviePartialUpdate(BaseModel):
     """Модель для частичного обновления информации о фильме."""
 
     name: StringMinLen3 | None = None
@@ -54,13 +54,13 @@ class FilmPartialUpdate(BaseModel):
     genre: StringMinLen3 | None = None
 
 
-class FilmRead(FilmBase):
+class MovieRead(MovieBase):
     """Модель для чтения информации о фильме."""
 
     slug: str
 
 
-class Film(FilmBase):
+class Movie(MovieBase):
     """Модель информации о фильме."""
 
     slug: str

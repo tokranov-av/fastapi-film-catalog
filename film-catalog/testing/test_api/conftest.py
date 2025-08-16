@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from api.api_v1.auth.services import redis_tokens
 from api.api_v1.film_catalog_urls.crud import storage
 from main import app
-from schemas.film import Film
+from schemas.film import Movie
 from testing.utils import create_film_random_slug
 
 
@@ -31,7 +31,7 @@ def client_with_token(auth_token: str) -> Generator[TestClient]:
 
 
 @pytest.fixture
-def film() -> Generator[Film]:
+def film() -> Generator[Movie]:
     film = create_film_random_slug()
     yield film
     storage.delete(film)

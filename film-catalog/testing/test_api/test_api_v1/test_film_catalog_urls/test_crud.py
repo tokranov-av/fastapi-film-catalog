@@ -9,10 +9,10 @@ from api.api_v1.film_catalog_urls.crud import (
     storage,
 )
 from schemas.film import (
-    Film,
-    FilmCreate,
-    FilmPartialUpdate,
-    FilmUpdate,
+    Movie,
+    MovieCreate,
+    MoviePartialUpdate,
+    MovieUpdate,
 )
 from testing.utils import (
     create_film_random_slug,
@@ -20,7 +20,7 @@ from testing.utils import (
 
 
 @pytest.fixture
-def film() -> Generator[Film]:
+def film() -> Generator[Movie]:
     film = create_film_random_slug()
     yield film
     storage.delete(film)
@@ -36,7 +36,7 @@ class FilmStorageUpdateTestCase(TestCase):
         storage.delete(self.film)
 
     def test_update(self) -> None:
-        film_update = FilmUpdate(**self.film.model_dump())
+        film_update = MovieUpdate(**self.film.model_dump())
         film_update.description = self.expected_description
         film_update.genre = self.expected_genre
 
@@ -49,7 +49,7 @@ class FilmStorageUpdateTestCase(TestCase):
         self.assertEqual(self.expected_genre, updated_film.genre)
 
     def test_partial_update(self) -> None:
-        film_partial_update = FilmPartialUpdate(
+        film_partial_update = MoviePartialUpdate(
             description=self.expected_description,
             genre=self.expected_genre,
         )
@@ -67,7 +67,7 @@ class FilmStorageUpdateTestCase(TestCase):
 
 class FilmStorageGetFilmsTestCase(TestCase):
     FILMS_COUNT = 3
-    films: ClassVar[list[Film]] = []
+    films: ClassVar[list[Movie]] = []
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -99,8 +99,8 @@ class FilmStorageGetFilmsTestCase(TestCase):
                 self.assertEqual(db_film, film)
 
 
-def test_create_or_raise_if_exists(film: Film) -> None:
-    film_create = FilmCreate(**film.model_dump())
+def test_create_or_raise_if_exists(film: Movie) -> None:
+    film_create = MovieCreate(**film.model_dump())
 
     with pytest.raises(
         FilmAlreadyExistsError,

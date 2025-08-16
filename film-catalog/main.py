@@ -15,7 +15,7 @@ logging.basicConfig(
 )
 
 app = FastAPI(
-    title="Film Catalog API",
+    title="Movie Catalog API",
     lifespan=lifespan,
 )
 app.include_router(main_router)

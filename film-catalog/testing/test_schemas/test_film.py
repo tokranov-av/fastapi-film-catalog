@@ -5,17 +5,17 @@ from pydantic import ValidationError
 
 from core.config import TIME_ZONE
 from schemas.film import (
-    Film,
-    FilmCreate,
-    FilmPartialUpdate,
-    FilmUpdate,
+    Movie,
+    MovieCreate,
+    MoviePartialUpdate,
+    MovieUpdate,
 )
 
 
 class FilmSchemesTestCase(TestCase):
     def setUp(self) -> None:
         self.some_notes = "some-notes"
-        self.film = Film(
+        self.film = Movie(
             name="Some name",
             description="Some description",
             production_year=datetime.now(tz=TIME_ZONE).year,
@@ -27,7 +27,7 @@ class FilmSchemesTestCase(TestCase):
 
     def test_film_create(self) -> None:
         """Проверка создания экземпляра фильма."""
-        film_create = FilmCreate(
+        film_create = MovieCreate(
             name="Some name",
             description="Some description",
             production_year=datetime.now(tz=TIME_ZONE).year,
@@ -36,7 +36,7 @@ class FilmSchemesTestCase(TestCase):
             slug="some-slug",
         )
 
-        film = Film(
+        film = Movie(
             **film_create.model_dump(),
             notes=self.some_notes,
         )
@@ -51,7 +51,7 @@ class FilmSchemesTestCase(TestCase):
 
     def test_film_update(self) -> None:
         """Проверка обновления экземпляра фильма."""
-        film_update = FilmUpdate(
+        film_update = MovieUpdate(
             name="Movie title",
             description="Movie description",
             production_year=datetime.now(tz=TIME_ZONE).year - 1,
@@ -72,14 +72,14 @@ class FilmSchemesTestCase(TestCase):
     def test_partial_update(self) -> None:
         """Проверка частичного обновления экземпляра фильма."""
         partial_updates = [
-            ("field name: name", FilmPartialUpdate(name="Movie title")),
+            ("field name: name", MoviePartialUpdate(name="Movie title")),
             (
                 "field name: description",
-                FilmPartialUpdate(description="Movie description"),
+                MoviePartialUpdate(description="Movie description"),
             ),
-            ("field name: production_year", FilmPartialUpdate(production_year=2025)),
-            ("field name: country", FilmPartialUpdate(country="Country")),
-            ("field name: genre", FilmPartialUpdate(genre="Genre")),
+            ("field name: production_year", MoviePartialUpdate(production_year=2025)),
+            ("field name: country", MoviePartialUpdate(country="Country")),
+            ("field name: genre", MoviePartialUpdate(genre="Genre")),
         ]
 
         for msg, partial_update in partial_updates:
@@ -97,7 +97,7 @@ class FilmSchemesTestCase(TestCase):
 
     def test_partial_update_with_empty_instance(self) -> None:
         """Проверка частичного обновления экземпляра фильма с пустым экземпляром."""
-        film_partial_update = FilmPartialUpdate()
+        film_partial_update = MoviePartialUpdate()
         film = self.film.model_copy()
 
         for field_name, value in film_partial_update.model_dump(
@@ -115,7 +115,7 @@ class FilmSchemesTestCase(TestCase):
     def test_film_create_slug_too_short(self) -> None:
         """Проверяет выброс исключения при слишком коротком слаге."""
         with self.assertRaises(ValidationError) as exc_info:
-            FilmCreate(
+            MovieCreate(
                 name="sl",
                 description="Some description",
                 production_year=datetime.now(tz=TIME_ZONE).year,
@@ -136,7 +136,7 @@ class FilmSchemesTestCase(TestCase):
             ValidationError,
             expected_regex="String should have at least 3 characters",
         ):
-            FilmCreate(
+            MovieCreate(
                 name="sl",
                 description="Some description",
                 production_year=datetime.now(tz=TIME_ZONE).year,

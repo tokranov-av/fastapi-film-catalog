@@ -14,10 +14,10 @@ from core import (
     config,
 )
 from schemas.film import (
-    Film,
-    FilmCreate,
-    FilmPartialUpdate,
-    FilmUpdate,
+    Movie,
+    MovieCreate,
+    MoviePartialUpdate,
+    MovieUpdate,
 )
 
 log = logging.getLogger(__name__)
@@ -39,26 +39,26 @@ class FilmAlreadyExistsError(FilmBaseError):
 
 
 class FilmStorage(BaseModel):
-    def save_film(self, film: Film) -> None:
+    def save_film(self, film: Movie) -> None:
         redis.hset(
             name=config.REDIS_FILMS_HASH_NAME,
             key=film.slug,
             value=film.model_dump_json(),
         )
 
-    def get(self) -> list[Film]:
+    def get(self) -> list[Movie]:
         return [
-            Film.model_validate_json(film)
+            Movie.model_validate_json(film)
             for film in redis.hvals(name=config.REDIS_FILMS_HASH_NAME)
         ]
 
-    def get_by_slug(self, slug: str) -> Film | None:
+    def get_by_slug(self, slug: str) -> Movie | None:
         if data := redis.hget(
             name=config.REDIS_FILMS_HASH_NAME,
             key=slug,
         ):
             assert isinstance(data, str)
-            return Film.model_validate_json(data)
+            return Movie.model_validate_json(data)
 
         return None
 
@@ -71,8 +71,8 @@ class FilmStorage(BaseModel):
             ),
         )
 
-    def create(self, film_create: FilmCreate) -> Film:
-        film = Film(
+    def create(self, film_create: MovieCreate) -> Movie:
+        film = Movie(
             **film_create.model_dump(),
         )
         self.save_film(film=film)
@@ -80,11 +80,11 @@ class FilmStorage(BaseModel):
 
         return film
 
-    def create_or_raise_if_exists(self, film_create: FilmCreate) -> Film:
+    def create_or_raise_if_exists(self, film_create: MovieCreate) -> Movie:
         if not self.exists(film_create.slug):
             return self.create(film_create)
 
-        msg = f"Film with slug {film_create.slug} already exists"
+        msg = f"Movie with slug {film_create.slug} already exists"
         raise FilmAlreadyExistsError(msg)
 
     def delete_by_slug(self, slug: str) -> None:
@@ -93,14 +93,14 @@ class FilmStorage(BaseModel):
             slug,
         )
 
-    def delete(self, film: Film) -> None:
+    def delete(self, film: Movie) -> None:
         self.delete_by_slug(film.slug)
 
     def update(
         self,
-        film: Film,
-        film_in: FilmUpdate,
-    ) -> Film:
+        film: Movie,
+        film_in: MovieUpdate,
+    ) -> Movie:
         for field_name, value in film_in:
             setattr(film, field_name, value)
         self.save_film(film=film)
@@ -109,9 +109,9 @@ class FilmStorage(BaseModel):
 
     def update_partial(
         self,
-        film: Film,
-        film_in: FilmPartialUpdate,
-    ) -> Film:
+        film: Movie,
+        film_in: MoviePartialUpdate,
+    ) -> Movie:
         for field_name, value in film_in.model_dump(exclude_unset=True).items():
             setattr(film, field_name, value)
         self.save_film(film=film)

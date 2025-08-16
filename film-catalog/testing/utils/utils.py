@@ -12,7 +12,7 @@ from datetime import datetime
 
 from api.api_v1.film_catalog_urls.crud import storage
 from core.config import TIME_ZONE
-from schemas.film import Film, FilmCreate
+from schemas.film import Movie, MovieCreate
 
 
 def get_random_string(length: int = 8) -> str:
@@ -29,8 +29,8 @@ def build_film_create(
     slug: str,
     name: str | None = None,
     description: str | None = None,
-) -> FilmCreate:
-    return FilmCreate(
+) -> MovieCreate:
+    return MovieCreate(
         name=name if name is not None else get_random_string(),
         description=description if description is not None else get_random_string(),
         production_year=datetime.now(tz=TIME_ZONE).year,
@@ -43,7 +43,7 @@ def build_film_create(
 def build_film_create_random_slug(
     name: str | None = None,
     description: str | None = None,
-) -> FilmCreate:
+) -> MovieCreate:
     return build_film_create(
         slug=get_random_string(),
         name=name,
@@ -55,7 +55,7 @@ def create_film(
     slug: str,
     name: str | None = None,
     description: str | None = None,
-) -> Film:
+) -> Movie:
     """Создает и сохраняет фильм в хранилище."""
     film_create = build_film_create(
         slug=slug,
@@ -69,7 +69,7 @@ def create_film(
 def create_film_random_slug(
     name: str | None = None,
     description: str | None = None,
-) -> Film:
+) -> Movie:
     film_create = build_film_create_random_slug(
         name=name,
         description=description,

@@ -9,8 +9,8 @@ from fastapi.testclient import TestClient
 from core.config import TIME_ZONE
 from main import app
 from schemas.film import (
-    Film,
-    FilmCreate,
+    Movie,
+    MovieCreate,
 )
 from testing.utils import build_film_create_random_slug, get_random_string
 
@@ -20,7 +20,7 @@ pytestmark = pytest.mark.apitest
 @pytest.mark.apitest
 def test_create_film(client_with_token: TestClient) -> None:
     url = app.url_path_for("create_film")
-    film_create = FilmCreate(
+    film_create = MovieCreate(
         name=get_random_string(),
         description=get_random_string(),
         production_year=datetime.now(tz=TIME_ZONE).year,
@@ -39,14 +39,14 @@ def test_create_film(client_with_token: TestClient) -> None:
 
 
 @pytest.mark.apitest
-def test_create_film_already_exists(client_with_token: TestClient, film: Film) -> None:
+def test_create_film_already_exists(client_with_token: TestClient, film: Movie) -> None:
     url = app.url_path_for("create_film")
 
     response = client_with_token.post(url=url, json=film.model_dump())
 
     assert response.status_code == status.HTTP_409_CONFLICT, response.text
 
-    expected_message = f"Film with slug = {film.slug!r} already exists."
+    expected_message = f"Movie with slug = {film.slug!r} already exists."
     response_data = response.json()
 
     assert response_data["detail"] == expected_message, response.text

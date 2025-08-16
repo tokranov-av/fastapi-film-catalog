@@ -21,7 +21,7 @@ from api.api_v1.auth.services import (
     redis_users,
 )
 from schemas.film import (
-    Film,
+    Movie,
 )
 
 from .crud import (
@@ -52,8 +52,8 @@ user_basic_auth = HTTPBasic(
 )
 
 
-def prefetch_film(slug: str) -> Film:
-    film: Film | None = storage.get_by_slug(slug=slug)
+def prefetch_film(slug: str) -> Movie:
+    film: Movie | None = storage.get_by_slug(slug=slug)
 
     if film:
         return film

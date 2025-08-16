@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 from api.api_v1.film_catalog_urls.crud import storage
 from main import app
-from schemas.film import Film
+from schemas.film import Movie
 from testing.utils import create_film
 
 
@@ -16,14 +16,14 @@ from testing.utils import create_film
         pytest.param("qwerty-foo-bar-baz-z", id="max_length_slug"),
     ],
 )
-def film(request: SubRequest) -> Film:
+def film(request: SubRequest) -> Movie:
     return create_film(slug=request.param)
 
 
 @pytest.mark.apitest
 def test_delete(
     client_with_token: TestClient,
-    film: Film,
+    film: Movie,
 ) -> None:
     assert storage.exists(film.slug)
 

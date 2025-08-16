@@ -15,17 +15,17 @@ from api.api_v1.film_catalog_urls.dependencies import (
     prefetch_film,
 )
 from schemas.film import (
-    Film,
-    FilmPartialUpdate,
-    FilmRead,
-    FilmUpdate,
+    Movie,
+    MoviePartialUpdate,
+    MovieRead,
+    MovieUpdate,
 )
 
 router = APIRouter(
     prefix="/{slug}",
     responses={
         status.HTTP_404_NOT_FOUND: {
-            "description": "Film not found",
+            "description": "Movie not found",
             "content": {
                 "application/json": {
                     "example": {
@@ -38,29 +38,29 @@ router = APIRouter(
 )
 
 FilmBySlug = Annotated[
-    Film,
+    Movie,
     Depends(prefetch_film),
 ]
 
 
 @router.get(
     path="/",
-    response_model=FilmRead,
+    response_model=MovieRead,
 )
 def read_film(
     film: FilmBySlug,
-) -> Film:
+) -> Movie:
     return film
 
 
 @router.put(
     path="/",
-    response_model=FilmRead,
+    response_model=MovieRead,
 )
 def update_film(
     film: FilmBySlug,
-    film_in: FilmUpdate,
-) -> Film:
+    film_in: MovieUpdate,
+) -> Movie:
     return storage.update(
         film=film,
         film_in=film_in,
@@ -69,12 +69,12 @@ def update_film(
 
 @router.patch(
     path="/",
-    response_model=FilmRead,
+    response_model=MovieRead,
 )
 def update_film_partial(
     film: FilmBySlug,
-    film_in: FilmPartialUpdate,
-) -> Film:
+    film_in: MoviePartialUpdate,
+) -> Movie:
     return storage.update_partial(
         film=film,
         film_in=film_in,

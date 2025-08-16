@@ -8,13 +8,13 @@ from fastapi.testclient import TestClient
 from api.api_v1.film_catalog_urls.crud import storage
 from main import app
 from schemas import MAX_LENGTH_FOR_DESCRIPTION
-from schemas.film import Film
+from schemas.film import Movie
 from testing.utils import create_film_random_slug
 
 
 class TestUpdatePartial:
     @pytest.fixture
-    def film(self, request: SubRequest) -> Generator[Film]:
+    def film(self, request: SubRequest) -> Generator[Movie]:
         film = create_film_random_slug(description=request.param)
         yield film
         storage.delete_by_slug(film.slug)
@@ -49,7 +49,7 @@ class TestUpdatePartial:
     def test_update_film_partial(
         self,
         client_with_token: TestClient,
-        film: Film,
+        film: Movie,
         new_description: str,
     ) -> None:
         url = app.url_path_for(

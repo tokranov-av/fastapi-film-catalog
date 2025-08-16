@@ -13,9 +13,9 @@ from api.api_v1.film_catalog_urls.dependencies import (
     api_token_or_user_basic_auth_required_for_unsafe_methods,
 )
 from schemas.film import (
-    Film,
-    FilmCreate,
-    FilmRead,
+    Movie,
+    MovieCreate,
+    MovieRead,
 )
 
 router = APIRouter(
@@ -41,23 +41,23 @@ router = APIRouter(
 
 @router.get(
     path="/",
-    response_model=list[FilmRead],
+    response_model=list[MovieRead],
 )
-def get_list_of_films() -> list[Film]:
+def get_list_of_films() -> list[Movie]:
     return storage.get()
 
 
 @router.post(
     path="/",
-    response_model=FilmRead,
+    response_model=MovieRead,
     status_code=status.HTTP_201_CREATED,
     responses={
         status.HTTP_409_CONFLICT: {
-            "description": "Film with such slug already exists.",
+            "description": "Movie with such slug already exists.",
             "content": {
                 "application/json": {
                     "example": {
-                        "detail": "Film with slug = 'name' already exists.",
+                        "detail": "Movie with slug = 'name' already exists.",
                     },
                 },
             },
@@ -65,12 +65,12 @@ def get_list_of_films() -> list[Film]:
     },
 )
 def create_film(
-    film_create: FilmCreate,
-) -> Film:
+    film_create: MovieCreate,
+) -> Movie:
     try:
         return storage.create_or_raise_if_exists(film_create)
     except FilmAlreadyExistsError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"Film with slug = {film_create.slug!r} already exists.",
+            detail=f"Movie with slug = {film_create.slug!r} already exists.",
         ) from None

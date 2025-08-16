@@ -7,14 +7,14 @@ from fastapi.testclient import TestClient
 
 from api.api_v1.film_catalog_urls.crud import storage
 from main import app
-from schemas.film import Film, FilmUpdate
+from schemas.film import Movie, MovieUpdate
 from testing.utils import create_film_random_slug
 
 
 @pytest.mark.apitest
 class TestUpdate:
     @pytest.fixture
-    def film(self, request: SubRequest) -> Generator[Film]:
+    def film(self, request: SubRequest) -> Generator[Movie]:
         name, description = request.param
         film = create_film_random_slug(
             name=name,
@@ -65,14 +65,14 @@ class TestUpdate:
     def test_update_film_details(
         self,
         client_with_token: TestClient,
-        film: Film,
+        film: Movie,
         updated_data: dict[str, str | int],
     ) -> None:
         url = app.url_path_for(
             "update_film",
             slug=film.slug,
         )
-        film_data = FilmUpdate(**film.model_dump()).model_dump()
+        film_data = MovieUpdate(**film.model_dump()).model_dump()
 
         response = client_with_token.put(
             url,
