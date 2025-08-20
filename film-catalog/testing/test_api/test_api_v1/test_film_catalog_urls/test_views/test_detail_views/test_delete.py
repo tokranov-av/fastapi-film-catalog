@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from api.api_v1.film_catalog_urls.crud import storage
 from main import app
 from schemas.film import Movie
-from testing.utils import create_film
+from testing.utils import create_movie
 
 
 @pytest.fixture(
@@ -16,19 +16,19 @@ from testing.utils import create_film
         pytest.param("qwerty-foo-bar-baz-z", id="max_length_slug"),
     ],
 )
-def film(request: SubRequest) -> Movie:
-    return create_film(slug=request.param)
+def movie(request: SubRequest) -> Movie:
+    return create_movie(slug=request.param)
 
 
 @pytest.mark.apitest
 def test_delete(
     client_with_token: TestClient,
-    film: Movie,
+    movie: Movie,
 ) -> None:
-    assert storage.exists(film.slug)
+    assert storage.exists(movie.slug)
 
-    url = app.url_path_for("delete_film", slug=film.slug)
+    url = app.url_path_for("delete_movie", slug=movie.slug)
     response = client_with_token.delete(url=url)
 
     assert response.status_code == status.HTTP_204_NO_CONTENT, response.text
-    assert not storage.exists(film.slug)
+    assert not storage.exists(movie.slug)

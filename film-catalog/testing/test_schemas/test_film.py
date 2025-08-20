@@ -12,10 +12,10 @@ from schemas.film import (
 )
 
 
-class FilmSchemesTestCase(TestCase):
+class MovieSchemesTestCase(TestCase):
     def setUp(self) -> None:
         self.some_notes = "some-notes"
-        self.film = Movie(
+        self.movie = Movie(
             name="Some name",
             description="Some description",
             production_year=datetime.now(tz=TIME_ZONE).year,
@@ -25,9 +25,9 @@ class FilmSchemesTestCase(TestCase):
             notes=self.some_notes,
         )
 
-    def test_film_create(self) -> None:
+    def test_movie_create(self) -> None:
         """Проверка создания экземпляра фильма."""
-        film_create = MovieCreate(
+        movie_create = MovieCreate(
             name="Some name",
             description="Some description",
             production_year=datetime.now(tz=TIME_ZONE).year,
@@ -36,22 +36,22 @@ class FilmSchemesTestCase(TestCase):
             slug="some-slug",
         )
 
-        film = Movie(
-            **film_create.model_dump(),
+        movie = Movie(
+            **movie_create.model_dump(),
             notes=self.some_notes,
         )
 
-        self.assertEqual(film_create.name, film.name)
-        self.assertEqual(film_create.description, film.description)
-        self.assertEqual(film_create.production_year, film.production_year)
-        self.assertEqual(film_create.country, film.country)
-        self.assertEqual(film_create.genre, film.genre)
-        self.assertEqual(film_create.slug, film.slug)
-        self.assertEqual(self.some_notes, film.notes)
+        self.assertEqual(movie_create.name, movie.name)
+        self.assertEqual(movie_create.description, movie.description)
+        self.assertEqual(movie_create.production_year, movie.production_year)
+        self.assertEqual(movie_create.country, movie.country)
+        self.assertEqual(movie_create.genre, movie.genre)
+        self.assertEqual(movie_create.slug, movie.slug)
+        self.assertEqual(self.some_notes, movie.notes)
 
-    def test_film_update(self) -> None:
+    def test_movie_update(self) -> None:
         """Проверка обновления экземпляра фильма."""
-        film_update = MovieUpdate(
+        movie_update = MovieUpdate(
             name="Movie title",
             description="Movie description",
             production_year=datetime.now(tz=TIME_ZONE).year - 1,
@@ -59,15 +59,15 @@ class FilmSchemesTestCase(TestCase):
             genre="Мелодрама",
         )
 
-        for field_name, value in film_update:
-            if hasattr(self.film, field_name):
-                setattr(self.film, field_name, value)
+        for field_name, value in movie_update:
+            if hasattr(self.movie, field_name):
+                setattr(self.movie, field_name, value)
 
-        self.assertEqual(self.film.name, film_update.name)
-        self.assertEqual(self.film.description, film_update.description)
-        self.assertEqual(self.film.production_year, film_update.production_year)
-        self.assertEqual(self.film.country, film_update.country)
-        self.assertEqual(self.film.genre, film_update.genre)
+        self.assertEqual(self.movie.name, movie_update.name)
+        self.assertEqual(self.movie.description, movie_update.description)
+        self.assertEqual(self.movie.production_year, movie_update.production_year)
+        self.assertEqual(self.movie.country, movie_update.country)
+        self.assertEqual(self.movie.genre, movie_update.genre)
 
     def test_partial_update(self) -> None:
         """Проверка частичного обновления экземпляра фильма."""
@@ -87,32 +87,32 @@ class FilmSchemesTestCase(TestCase):
                 for field_name, value in partial_update.model_dump(
                     exclude_unset=True,
                 ).items():
-                    if hasattr(self.film, field_name):
-                        setattr(self.film, field_name, value)
+                    if hasattr(self.movie, field_name):
+                        setattr(self.movie, field_name, value)
 
                     self.assertEqual(
                         getattr(partial_update, field_name),
-                        getattr(self.film, field_name),
+                        getattr(self.movie, field_name),
                     )
 
     def test_partial_update_with_empty_instance(self) -> None:
         """Проверка частичного обновления экземпляра фильма с пустым экземпляром."""
-        film_partial_update = MoviePartialUpdate()
-        film = self.film.model_copy()
+        movie_partial_update = MoviePartialUpdate()
+        movie = self.movie.model_copy()
 
-        for field_name, value in film_partial_update.model_dump(
+        for field_name, value in movie_partial_update.model_dump(
             exclude_unset=True,
         ).items():
-            if hasattr(self.film, field_name):
-                setattr(self.film, field_name, value)
+            if hasattr(self.movie, field_name):
+                setattr(self.movie, field_name, value)
 
-        self.assertEqual(film.name, self.film.name)
-        self.assertEqual(film.description, self.film.description)
-        self.assertEqual(film.production_year, self.film.production_year)
-        self.assertEqual(film.country, self.film.country)
-        self.assertEqual(film.genre, self.film.genre)
+        self.assertEqual(movie.name, self.movie.name)
+        self.assertEqual(movie.description, self.movie.description)
+        self.assertEqual(movie.production_year, self.movie.production_year)
+        self.assertEqual(movie.country, self.movie.country)
+        self.assertEqual(movie.genre, self.movie.genre)
 
-    def test_film_create_slug_too_short(self) -> None:
+    def test_movie_create_slug_too_short(self) -> None:
         """Проверяет выброс исключения при слишком коротком слаге."""
         with self.assertRaises(ValidationError) as exc_info:
             MovieCreate(
@@ -131,7 +131,7 @@ class FilmSchemesTestCase(TestCase):
             error_details["type"],
         )
 
-    def test_film_create_slug_too_short_with_regex(self) -> None:
+    def test_movie_create_slug_too_short_with_regex(self) -> None:
         with self.assertRaisesRegex(
             ValidationError,
             expected_regex="String should have at least 3 characters",

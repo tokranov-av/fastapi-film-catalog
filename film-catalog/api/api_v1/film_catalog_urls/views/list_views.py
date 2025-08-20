@@ -6,7 +6,7 @@ from fastapi import (
 )
 
 from api.api_v1.film_catalog_urls.crud import (
-    FilmAlreadyExistsError,
+    MovieAlreadyExistsError,
     storage,
 )
 from api.api_v1.film_catalog_urls.dependencies import (
@@ -43,7 +43,7 @@ router = APIRouter(
     path="/",
     response_model=list[MovieRead],
 )
-def get_list_of_films() -> list[Movie]:
+def get_list_of_movies() -> list[Movie]:
     return storage.get()
 
 
@@ -64,13 +64,13 @@ def get_list_of_films() -> list[Movie]:
         },
     },
 )
-def create_film(
-    film_create: MovieCreate,
+def create_movie(
+    movie_create: MovieCreate,
 ) -> Movie:
     try:
-        return storage.create_or_raise_if_exists(film_create)
-    except FilmAlreadyExistsError:
+        return storage.create_or_raise_if_exists(movie_create)
+    except MovieAlreadyExistsError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"Movie with slug = {film_create.slug!r} already exists.",
+            detail=f"Movie with slug = {movie_create.slug!r} already exists.",
         ) from None

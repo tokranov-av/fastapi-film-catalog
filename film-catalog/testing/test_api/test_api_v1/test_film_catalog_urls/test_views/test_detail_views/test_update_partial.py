@@ -9,19 +9,19 @@ from api.api_v1.film_catalog_urls.crud import storage
 from main import app
 from schemas import MAX_LENGTH_FOR_DESCRIPTION
 from schemas.film import Movie
-from testing.utils import create_film_random_slug
+from testing.utils import create_movie_random_slug
 
 
 class TestUpdatePartial:
     @pytest.fixture
-    def film(self, request: SubRequest) -> Generator[Movie]:
-        film = create_film_random_slug(description=request.param)
-        yield film
-        storage.delete_by_slug(film.slug)
+    def movie(self, request: SubRequest) -> Generator[Movie]:
+        movie = create_movie_random_slug(description=request.param)
+        yield movie
+        storage.delete_by_slug(movie.slug)
 
     @pytest.mark.apitest
     @pytest.mark.parametrize(
-        "film, new_description",
+        "movie, new_description",
         [
             pytest.param(
                 "some description",
@@ -44,17 +44,17 @@ class TestUpdatePartial:
                 id="min-description-to-max-description",
             ),
         ],
-        indirect=["film"],
+        indirect=["movie"],
     )
     def test_update_film_partial(
         self,
         client_with_token: TestClient,
-        film: Movie,
+        movie: Movie,
         new_description: str,
     ) -> None:
         url = app.url_path_for(
-            "update_film_partial",
-            slug=film.slug,
+            "update_movie_partial",
+            slug=movie.slug,
         )
 
         response = client_with_token.patch(
@@ -64,7 +64,7 @@ class TestUpdatePartial:
 
         assert response.status_code == status.HTTP_200_OK, response.text
 
-        film_db = storage.get_by_slug(slug=film.slug)
+        movie_db = storage.get_by_slug(slug=movie.slug)
 
-        assert film_db
-        assert film_db.description == new_description
+        assert movie_db
+        assert movie_db.description == new_description

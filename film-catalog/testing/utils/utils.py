@@ -1,8 +1,8 @@
 __all__ = (
-    "build_film_create",
-    "build_film_create_random_slug",
-    "create_film",
-    "create_film_random_slug",
+    "build_movie_create",
+    "build_movie_create_random_slug",
+    "create_movie",
+    "create_movie_random_slug",
     "get_random_string",
 )
 
@@ -25,7 +25,7 @@ def get_random_string(length: int = 8) -> str:
     )
 
 
-def build_film_create(
+def build_movie_create(
     slug: str,
     name: str | None = None,
     description: str | None = None,
@@ -40,39 +40,39 @@ def build_film_create(
     )
 
 
-def build_film_create_random_slug(
+def build_movie_create_random_slug(
     name: str | None = None,
     description: str | None = None,
 ) -> MovieCreate:
-    return build_film_create(
+    return build_movie_create(
         slug=get_random_string(),
         name=name,
         description=description,
     )
 
 
-def create_film(
+def create_movie(
     slug: str,
     name: str | None = None,
     description: str | None = None,
 ) -> Movie:
     """Создает и сохраняет фильм в хранилище."""
-    film_create = build_film_create(
+    movie_create = build_movie_create(
         slug=slug,
         name=name,
         description=description,
     )
 
-    return storage.create(film_create)
+    return storage.create(movie_create)
 
 
-def create_film_random_slug(
+def create_movie_random_slug(
     name: str | None = None,
     description: str | None = None,
 ) -> Movie:
-    film_create = build_film_create_random_slug(
+    movie_create = build_movie_create_random_slug(
         name=name,
         description=description,
     )
 
-    return storage.create(film_create)
+    return storage.create(movie_create)

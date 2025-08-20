@@ -37,7 +37,7 @@ router = APIRouter(
     },
 )
 
-FilmBySlug = Annotated[
+MovieBySlug = Annotated[
     Movie,
     Depends(prefetch_film),
 ]
@@ -47,23 +47,23 @@ FilmBySlug = Annotated[
     path="/",
     response_model=MovieRead,
 )
-def read_film(
-    film: FilmBySlug,
+def read_movie(
+    movie: MovieBySlug,
 ) -> Movie:
-    return film
+    return movie
 
 
 @router.put(
     path="/",
     response_model=MovieRead,
 )
-def update_film(
-    film: FilmBySlug,
-    film_in: MovieUpdate,
+def update_movie(
+    movie: MovieBySlug,
+    movie_in: MovieUpdate,
 ) -> Movie:
     return storage.update(
-        film=film,
-        film_in=film_in,
+        movie=movie,
+        movie_in=movie_in,
     )
 
 
@@ -71,13 +71,13 @@ def update_film(
     path="/",
     response_model=MovieRead,
 )
-def update_film_partial(
-    film: FilmBySlug,
-    film_in: MoviePartialUpdate,
+def update_movie_partial(
+    movie: MovieBySlug,
+    movie_in: MoviePartialUpdate,
 ) -> Movie:
     return storage.update_partial(
-        film=film,
-        film_in=film_in,
+        movie=movie,
+        movie_in=movie_in,
     )
 
 
@@ -85,10 +85,10 @@ def update_film_partial(
     path="/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_film(
-    film: FilmBySlug,
+def delete_movie(
+    movie: MovieBySlug,
 ) -> None:
-    storage.delete(film=film)
+    storage.delete(movie=movie)
 
 
 @router.post(
