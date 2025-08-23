@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Any
 
@@ -18,7 +19,11 @@ pytestmark = pytest.mark.apitest
 
 
 @pytest.mark.apitest
-def test_create_movie(client_with_token: TestClient) -> None:
+def test_create_movie(
+    caplog: pytest.LogCaptureFixture,
+    client_with_token: TestClient,
+) -> None:
+    caplog.set_level(logging.DEBUG)
     url = app.url_path_for("create_movie")
     movie_create = MovieCreate(
         name=get_random_string(),
@@ -36,6 +41,8 @@ def test_create_movie(client_with_token: TestClient) -> None:
     response_data = response.json()
 
     assert response_data == movie_create, response_data
+    assert "Создано описание фильма" in caplog.text
+    assert response_data.get("name") in caplog.text
 
 
 @pytest.mark.apitest
