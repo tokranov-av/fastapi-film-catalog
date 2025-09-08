@@ -2,6 +2,8 @@
 
 ## Разработка
 
+После push в репозиторий, проверьте GItHub Actions
+
 ### Установка
 
 Если работаете в IDE PyCharm, директорию film-catalog отметьте как "Sources Root":
