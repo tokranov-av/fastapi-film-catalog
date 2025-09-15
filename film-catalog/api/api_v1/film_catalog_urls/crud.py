@@ -67,7 +67,7 @@ class MovieStorage(BaseModel):
             bool,
             redis.hexists(
                 name=config.REDIS_MOVIES_HASH_NAME,
-                key=slug
+                key=slug,
             ),
         )
 
