@@ -18,7 +18,7 @@ from schemas.film import Movie, MovieCreate
 def get_random_string(length: int = 8) -> str:
     """Возвращает случайную строку из букв ascii_letters заданной длины."""
     return "".join(
-        random.choices(  # noqa: S311
+        random.choices(
             string.ascii_letters,
             k=length,
         ),
