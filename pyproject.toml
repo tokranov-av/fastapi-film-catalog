@@ -146,6 +146,7 @@ select = [
     "FURB", # refurb (FURB)
     "RUF", # Ruff-specific rules (RUF)
     "TRY", # tryceratops (TRY)
+    "S311", # S311 Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
 ignore = [
     "S101", # S101	assert	Use of assert detected
