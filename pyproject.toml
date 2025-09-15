@@ -163,3 +163,6 @@ unfixable = []
 "stuff.py" = [
     "T20", # flake8-print (T20)
 ]
+"film-catalog/testing/**.py" = [
+    "S311", # S311 Standard pseudo-random generators are not suitable for cryptographic purposes
+]
