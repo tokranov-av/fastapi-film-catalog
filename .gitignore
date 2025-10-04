@@ -148,4 +148,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# fils.json
+.secrets
