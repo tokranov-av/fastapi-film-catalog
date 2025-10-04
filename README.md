@@ -7,6 +7,7 @@
 [![Type Checking: mypy](https://img.shields.io/badge/type%20checking-mypy-blueviolet?logo=python&style=for-the-badge)](https://github.com/python/mypy)
 [![Dependency: uv](https://img.shields.io/badge/dependencies-uv-4B8BBE?logo=python&style=for-the-badge)](https://github.com/astral-sh/uv)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-22C55E?style=for-the-badge&logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2Ftokranov-av%2F097eab66890510888aa7d0e190361e03%2Fraw%2Fcoverage.json&style=for-the-badge)](https://github.com/tokranov-av/fastapi-film-catalog/actions/workflows/python-checks.yaml)
 
 ## Разработка
 
