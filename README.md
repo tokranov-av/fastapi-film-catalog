@@ -73,6 +73,23 @@ mypy path/to/file.py
 ```
 ---
 
+### ✅ Запуск тестов
+
+Запустите redis в контейнере docker (временное решение, пока используется только redis в проекте):
+```shell
+docker container run --name redis-film-catalog-tests -d -p 6380:6379 redis
+```
+**Запуск тестов в виртуальном окружении**
+
+В терминале перейдите в директорию `fastapi-film-catalog`, после чего:
+- активируйте виртуальное окружение (ОС Ubuntu 24.04): `source .venv/bin/activate`
+- добавьте переменные окружения: `export TESTING=1` и `export REDIS_PORT=6380`
+- запустите тесты: `pytest -v`
+
+**Запуск тестов через uv**
+
+В директории `fastapi-film-catalog` выполните команду `TESTING=1 REDIS_PORT=6380 uv run pytest -v`
+
 ### Процесс внесения изменений
 
 1.  Сделайте `fork` репозитория.
