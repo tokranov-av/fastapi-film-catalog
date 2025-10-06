@@ -90,6 +90,8 @@ docker container run --name redis-film-catalog-tests -d -p 6380:6379 redis
 
 В директории `fastapi-film-catalog` выполните команду `TESTING=1 REDIS_PORT=6380 uv run pytest -v`
 
+---
+
 ### Процесс внесения изменений
 
 1.  Сделайте `fork` репозитория.
