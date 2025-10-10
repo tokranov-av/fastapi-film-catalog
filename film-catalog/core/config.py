@@ -72,6 +72,9 @@ class RedisConfig(BaseModel):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
+        env_file=BASE_DIR / ".env",
+        env_nested_delimiter="__",
+        env_prefix="FILM_CATALOG__",
     )
 
     logging: LoggingConfig = LoggingConfig()
