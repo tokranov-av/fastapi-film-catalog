@@ -1,0 +1,18 @@
+film-catalog:
+  logging:
+    log_level_name: INFO
+
+  redis:
+    connection:
+      host: localhost
+      port: 6379
+
+    db:
+      default: 0
+      tokens: 1
+      users: 2
+      movies: 3
+
+    collections_names:
+      tokens_set: tokens
+      movies_hash: movies
