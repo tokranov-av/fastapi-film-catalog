@@ -25,7 +25,7 @@ dev = [
 # uv settings
 
 [tool.uv]
-required-version = "~=0.8.17"
+required-version = "~=0.9.26"
 
 # pytest settings
 
