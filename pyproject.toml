@@ -9,6 +9,7 @@ dependencies = [
     "pydantic-settings[yaml]>=2.11.0",
     "redis[hiredis]>=6.2.0",
     "typer>=0.15.3",
+    "tzdata>=2026.1",
 ]
 
 [dependency-groups]
