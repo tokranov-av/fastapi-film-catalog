@@ -45,6 +45,15 @@ pre-commit install
 
 ---
 
+
+Запуск Redis
+
+```shell
+docker volume create fastapi-film-catalog
+docker container run --name redis-film-catalog -d -p 6379:6379 -v fastapi-film-catalog:/data redis
+```
+
+
 ### 🔍 Проверка с помощью Ruff
 
 Текущую директорию:
