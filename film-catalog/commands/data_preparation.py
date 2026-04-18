@@ -42,7 +42,7 @@ def load_data_from_file() -> None:
                 )
 
 
-@app.command(name="delete_by_slug")  # 👈 добавить команду удаления
+@app.command(name="delete_by_slug")
 def delete_movie_by_slug(slug: str) -> None:
     """Удаление фильма по слагу."""
     movie = storage.get_by_slug(slug=slug)
