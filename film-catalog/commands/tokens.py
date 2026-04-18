@@ -12,7 +12,7 @@ from api.api_v1.auth.services import (
 
 app = typer.Typer(
     name="token",
-    help="Tokens management",
+    help="[blue]Tokens management[/blue]",
     no_args_is_help=True,
     rich_markup_mode="rich",
 )
