@@ -18,8 +18,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-#          python-version-file: ".python-version"
-          python-version: '3.13.11'
+          python-version-file: ".python-version"
+          check-latest: true
       - name: Install Black
         run: |
           python -m pip install --upgrade pip
@@ -61,8 +61,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-#          python-version-file: ".python-version"
-          python-version: '3.13.11'
+          python-version-file: ".python-version"
+          check-latest: true
       - name: Setup uv
         uses: astral-sh/setup-uv@v5
         with:
