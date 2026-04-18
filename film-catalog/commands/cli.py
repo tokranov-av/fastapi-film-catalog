@@ -2,6 +2,7 @@ __all__ = ("app",)
 
 import typer
 
+from .data_preparation import app as load_data_app
 from .hello import app as hello_app
 from .tokens import app as tokens_app
 
@@ -18,3 +19,4 @@ def callback() -> None:
 
 app.add_typer(hello_app)
 app.add_typer(tokens_app)
+app.add_typer(load_data_app)
