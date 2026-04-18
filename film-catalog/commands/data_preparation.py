@@ -48,7 +48,7 @@ def delete_movie_by_slug(slug: str) -> None:
     movie = storage.get_by_slug(slug=slug)
     if not movie:
         print(
-            f"[red]A movie with the slug [bold]{movie['slug']}[/bold] not found.[/red]",
+            f"[red]A movie with the slug [bold]{slug}[/bold] not found.[/red]",
         )
     else:
         storage.delete_by_slug(slug=movie.slug)
