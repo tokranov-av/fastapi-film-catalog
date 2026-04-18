@@ -59,10 +59,14 @@ docker container run --name redis-film-catalog -d -p 6379:6379 -v fastapi-film-c
 
 1. Перейдите в директорию `film-catalog`, так как модуль manage.py расположен в данной директории
 2. Выполните команду:
+в unix системах
 ```shell
-python manage.py data_prep load_from_file
+manage.py data_prep load_from_file
 ```
-
+в windows
+```shell
+manage.bat data_prep load_from_file
+```
 
 ### 🔍 Проверка с помощью Ruff
 
