@@ -46,11 +46,20 @@ pre-commit install
 ---
 
 
-Запуск Redis
+### Запуск Redis
 
 ```shell
 docker volume create fastapi-film-catalog
 docker container run --name redis-film-catalog -d -p 6379:6379 -v fastapi-film-catalog:/data redis
+```
+
+### Загрузка тестовых данных в базу данных для ведения разработки
+
+Перед загрузкой данных, база где будут храниться данные должна быть запущена.
+1. Перейдите в директорию `film-catalog`, так как модуль manage.py расположен в данной директории
+2. Выполните команду:
+```shell
+python manage.py data_prep load_from_file
 ```
 
 
